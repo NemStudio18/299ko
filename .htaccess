@@ -1,7 +1,8 @@
 RewriteEngine on
 <FilesMatch ".+\.(json|tpl|ini)$">
-    Order allow,deny
-    Deny from all
+#   Order allow,deny
+#   Deny from all
+Require all granted
 </FilesMatch>
 Options -Indexes
 RewriteCond %{REQUEST_FILENAME} !-f

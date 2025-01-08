@@ -8,6 +8,7 @@
 			<tr>
 				<th>{{Lang.users-mail}}</th>
 				<th>{{Lang.users-actions}}</th>
+				<th>{{Lang.users-role}}</th>
 			</tr>
 		</thead>
 		{% FOR user IN users %}
@@ -23,6 +24,7 @@
 						</a>
 					</div>
 				</td>
+				<td>{{user.role}}</td>
 			</tr>
 		{% ENDFOR %}
 	</table>

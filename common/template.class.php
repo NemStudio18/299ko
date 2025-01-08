@@ -73,7 +73,7 @@ class Template {
         $this->addGlobalsToVars();
         $this->parse();
         // Uncomment the next line to see parsed template
-        // file_put_contents($this->file . '.cache.php', $this->content);
+         file_put_contents($this->file . '.cache.php', $this->content);
         eval('?>' . $this->content);
         return ob_get_clean();
     }
@@ -106,6 +106,8 @@ class Template {
      * {% DUMP plop %}
      */
     protected function parse() {
+        // gérer la balise SELECTED
+        $this->content = preg_replace_callback('#\{\% *SELECTED +(.+) *\%\}#iU', [$this, '_replace_selected'], $this->content);
         $this->content = preg_replace_callback('#\{\% *NOPARSE *\%\}(.*)\{\% *ENDNOPARSE *\%\}#isU', [$this,'_no_parse'], $this->content);
         $this->content = preg_replace('#\{\#(.*)\#\}#isU', '<?php /* $1 */ ?>', $this->content);
         $this->content = preg_replace_callback('#\{\% *IF +(.+) *\%\}#iU', [$this,'_ifReplace'], $this->content);
@@ -121,7 +123,15 @@ class Template {
         $this->content = preg_replace('#\{\% *ELSE *\%\}#i', '<?php }else{ ?>', $this->content);
         $this->content = preg_replace_callback('#\{\% *ELSEIF +(.+) *\%\}#iU', [$this,'_elseifReplace'], $this->content);
         $this->content = str_replace('#/§&µ&§;#', '{', $this->content);
+
     }
+
+    protected function _replace_selected($matches) {
+    // Récupère la condition passée à la balise SELECTED
+    $condition = trim($matches[1]);
+    // Transforme la condition en code PHP valide
+    return '<?php echo (' . $condition . ') ? \'selected\' : \'\'; ?>';
+}
 
     protected function _no_parse($matches) {
         return str_replace('{', '#/§&µ&§;#', htmlentities($matches[1]));

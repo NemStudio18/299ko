@@ -133,4 +133,42 @@ class UsersLoginController extends PublicController
         }
         return $mail;
     }
+
+    public function register()
+    {
+        $response = new StringResponse();
+        $tpl = $response->createPluginTemplate('users', 'register');
+        $tpl->set('registerLink', $this->router->generate('register-send')); // Lien d'action
+        $response->addTemplate($tpl);
+        return $response;
+    }
+
+public function registerSend()
+{
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $password = filter_input(INPUT_POST, 'password', FILTER_UNSAFE_RAW);
+
+    if (!$email || !$password) {
+        show::msg(Lang::get('users-bad-entries'), 'error');
+        $this->core->redirect($this->router->generate('register'));
+    }
+
+    // Vérifier si l'utilisateur existe déjà
+    if (UsersManager::getUser($email)) {
+        show::msg(Lang::get('users-already-exists'), 'error');
+        $this->core->redirect($this->router->generate('register'));
+    }
+
+    // Créer un nouvel utilisateur
+    $user = new User([
+        'email' => $email,
+        'pwd' => UsersManager::encrypt($password),
+        'role' => 'member' // Rôle par défaut pour les nouveaux membres
+    ]);
+    $user->save();
+
+    show::msg(Lang::get('users-registered'), 'success');
+    $this->core->redirect($this->router->generate('login'));
+}
+
 }

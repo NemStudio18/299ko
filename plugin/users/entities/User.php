@@ -19,6 +19,8 @@ class User implements JsonSerializable
 
     public string $email;
 
+    public string $role = 'member'; // Définir le rôle par défaut
+
     /**
      * User password
      */
@@ -37,7 +39,7 @@ class User implements JsonSerializable
     /**
      * Construct a new User instance.
      *
-     * @param array $infos User data including id, email, password hash, and token.
+     * @param array $infos User data including id, email, password hash, role, and token.
      */
     public function __construct($infos = [])
     {
@@ -46,6 +48,7 @@ class User implements JsonSerializable
             $this->email = $infos['email'];
             $this->pwd = $infos['pwd'];
             $this->token = $infos['token'];
+            $this->role = $infos['role'] ?? 'member'; // Rôle défini ou par défaut
         }
     }
 
@@ -59,7 +62,8 @@ class User implements JsonSerializable
             'id' => $this->id,
             'email' => $this->email,
             'pwd' => $this->pwd,
-            'token' => $this->token
+            'token' => $this->token,
+            'role' => $this->role // Ajout du rôle
         ];
     }
 
@@ -122,4 +126,13 @@ class User implements JsonSerializable
     {
         return UsersManager::deleteUser($this);
     }
+
+    /**
+     * Checks user role 
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
 }

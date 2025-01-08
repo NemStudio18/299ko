@@ -40,5 +40,29 @@ class AdminController extends Controller {
         }
         $this->user = UsersManager::getCurrentUser();
     }
+
+        /**
+     * Vérifie si l'utilisateur a un rôle spécifique.
+     *
+     * @param string $requiredRole Rôle requis pour accéder à l'action.
+     */
+    protected function checkAccess(string $requiredRole) {
+        if (!$this->user || !$this->user->hasRole($requiredRole)) {
+            show::msg(Lang::get('core.access-denied'), 'error');
+            $this->core->redirect($this->router->generate('home'));
+        }
+    }
+
+    /**
+     * Vérifie si l'utilisateur possède l'un des rôles autorisés.
+     *
+     * @param array $allowedRoles Liste des rôles autorisés.
+     */
+    protected function checkPermissions(array $allowedRoles) {
+        if (!$this->user || !in_array($this->user->role, $allowedRoles)) {
+            show::msg(Lang::get('core.access-denied'), 'error');
+            $this->core->redirect($this->router->generate('home'));
+        }
+    }
         
 }
