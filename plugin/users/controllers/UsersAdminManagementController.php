@@ -28,6 +28,7 @@ class UsersAdminManagementController extends AdminController {
         }
         $mail = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL) ?? false;
         $pwd = filter_input(INPUT_POST, 'pwd', FILTER_UNSAFE_RAW) ?? false;
+        $pseudo = filter_input(INPUT_POST, 'pseudo', FILTER_UNSAFE_RAW) ?? false;
         if (!$mail || !$pwd) {
             show::msg(Lang::get('users-bad-entries'), 'error');
             return $this->addUser();
@@ -38,6 +39,7 @@ class UsersAdminManagementController extends AdminController {
         }
         $user = new User();
         $user->email = $mail;
+        $user->pseudo = $pseudo;
         $user->pwd = UsersManager::encrypt($pwd);
         $user->save();
         show::msg(Lang::get('users-added'), 'success');
@@ -70,6 +72,7 @@ public function editUserSend() {
     $pwd = filter_input(INPUT_POST, 'pwd', FILTER_UNSAFE_RAW) ?? false;
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT) ?? false;
     $role = filter_input(INPUT_POST, 'role', FILTER_UNSAFE_RAW) ?? false; // Récupérer le rôle
+    $pseudo = filter_input(INPUT_POST, 'pseudo', FILTER_UNSAFE_RAW) ?? false;
 
     // Vérifier les données obligatoires
     if (!$mail || !$id || !$role) { // Ajouter la vérification du rôle
@@ -98,6 +101,7 @@ public function editUserSend() {
         $user->pwd = UsersManager::encrypt($pwd);
     }
     $user->email = $mail;
+    $user->pseudo = $pseudo;
     $user->role = $role; // Mettre à jour le rôle
     $user->save();
 

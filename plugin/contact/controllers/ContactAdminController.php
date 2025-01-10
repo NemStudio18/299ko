@@ -12,6 +12,9 @@ defined('ROOT') or exit('No direct script access allowed');
 class ContactAdminController extends AdminController {
 
     public function home() {
+
+                        // Vérification si l'utilisateur est administrateur
+        $this->checkAccess('admin');
         $response = new AdminResponse();
         $tpl = $response->createPluginTemplate('contact', 'admin-contact');
         

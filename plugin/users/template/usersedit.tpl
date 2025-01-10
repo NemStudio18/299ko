@@ -5,6 +5,8 @@
         <input type="hidden" name="id" value="<?php $this->_show_var('user.id'); ?>" />
         <label for="email"><?php echo lang::get('users-mail'); ?></label>
         <input type="email" id="email" name="email" value="<?php $this->_show_var('user.email'); ?>" required />
+        <label for="pseudo"><?php echo lang::get('pseudo'); ?></label>
+        <input type="text" id="pseudo" name="pseudo" value="<?php $this->_show_var('user.pseudo'); ?>" required />
         <label for="pwd"><?php echo lang::get('password'); ?></label>
         <input type="text" id="pwd" name="pwd" />
         <label for="role"><?php echo lang::get('users-role'); ?></label>

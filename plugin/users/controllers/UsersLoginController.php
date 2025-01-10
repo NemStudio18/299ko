@@ -159,16 +159,23 @@ public function registerSend()
         $this->core->redirect($this->router->generate('register'));
     }
 
-    // Créer un nouvel utilisateur
+    // Générer un nouvel ID pour l'utilisateur
+    $id = UsersManager::getNextId();
+
+    // Générer un token pour l'utilisateur
+    $token = UsersManager::generateToken();
+
+    // Créer un nouvel utilisateur avec l'ID et le token générés
     $user = new User([
+        'id' => $id,
         'email' => $email,
         'pwd' => UsersManager::encrypt($password),
-        'role' => 'member' // Rôle par défaut pour les nouveaux membres
+        'role' => 'member', // Rôle par défaut pour les nouveaux membres
+        'token' => $token // Ajouter le token ici
     ]);
     $user->save();
 
     show::msg(Lang::get('users-registered'), 'success');
     $this->core->redirect($this->router->generate('login'));
 }
-
 }

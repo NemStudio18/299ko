@@ -67,6 +67,7 @@ class router extends AltoRouter {
     }
 
     public function match ($requestUrl = null, $requestMethod = null) {
+        error_log("Trying to match URL: " . self::$url);
         return parent::match(self::$url);
     }
 

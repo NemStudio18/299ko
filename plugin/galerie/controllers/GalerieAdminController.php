@@ -14,6 +14,10 @@ class GalerieAdminController extends AdminController
 
     public function home()
     {
+
+                        // Vérification si l'utilisateur est administrateur
+        $this->checkAccess('admin');
+
         $galerie = new galerie();
         $response = new AdminResponse();
         $tpl = $response->createPluginTemplate('galerie', 'admin');

@@ -32,6 +32,7 @@ class newsComment
 
     public function __construct($val = array())
     {
+
         if (count($val) > 0) {
             $this->id = $val['id'];
             $this->idNews = $val['idNews'];
@@ -53,6 +54,7 @@ class newsComment
 
     public function show()
     {
+        
         $tpl = new Template(PLUGINS . 'blog/template/comment.tpl');
         $tpl->set('comment', $this);
         echo $tpl->output();

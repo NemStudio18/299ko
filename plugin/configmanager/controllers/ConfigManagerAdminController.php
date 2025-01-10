@@ -13,6 +13,8 @@ class ConfigManagerAdminController extends AdminController {
     
     public function home() {
 
+        $this->checkAccess('admin');
+
         $response = new AdminResponse();
         $tpl = $response->createPluginTemplate('configmanager', 'config');
 

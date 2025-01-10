@@ -12,7 +12,12 @@ defined('ROOT') or exit('No direct script access allowed');
 class PluginsManagerController extends AdminController
 {
 
+
     public function list() {
+
+              // Vérification si l'utilisateur est administrateur
+        $this->checkAccess('admin');
+
         $priority = array(
             1 => 1,
             2 => 2,

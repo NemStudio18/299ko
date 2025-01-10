@@ -16,6 +16,8 @@ class BlogAdminCommentsController extends AdminController {
     public function __construct()
     {
         parent::__construct();
+                                // Vérification si l'utilisateur est administrateur
+        $this->checkAccess('admin');
         $this->newsManager = new newsManager();
     }
 

@@ -24,5 +24,5 @@ $router->map('POST', '/admin/users/add/send', 'UsersAdminManagementController#ad
 $router->map('GET', '/admin/users/edit/[i:id]', 'UsersAdminManagementController#edit', 'users-edit');
 $router->map('POST', '/admin/users/edit/send', 'UsersAdminManagementController#editUserSend', 'users-edit-send');
 $router->map('GET', '/admin/users/delete/[i:id]/[a:token]', 'UsersAdminManagementController#delete', 'users-delete');
-$router->map('GET', '/register[/?]', 'UsersLoginController#register', 'register');
-$router->map('POST', '/register-send[/?]', 'UsersLoginController#registerSend', 'register-send');
+$router->map('GET', '/users/register[/?]', 'UsersLoginController#register', 'register');
+$router->map('POST', '/users/register-send[/?]', 'UsersLoginController#registerSend', 'register-send');

@@ -7,6 +7,7 @@
 		<thead>
 			<tr>
 				<th>{{Lang.users-mail}}</th>
+				<th>{{Lang.pseudo}}</th>
 				<th>{{Lang.users-actions}}</th>
 				<th>{{Lang.users-role}}</th>
 			</tr>
@@ -14,6 +15,7 @@
 		{% FOR user IN users %}
 			<tr>
 				<td>{{user.email}}</td>
+				<td>{{user.pseudo}}</td>
 				<td>
 					<div role="group">
 						<a class="button small" title="{{Lang.users-edit}}" href='{{ ROUTER.generate("users-edit", ["id" => user.id]) }}'>

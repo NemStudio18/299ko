@@ -19,6 +19,8 @@ class User implements JsonSerializable
 
     public string $email;
 
+    public string $pseudo;
+
     public string $role = 'member'; // Définir le rôle par défaut
 
     /**
@@ -46,6 +48,7 @@ class User implements JsonSerializable
         if (!empty($infos)) {
             $this->id = $infos['id'];
             $this->email = $infos['email'];
+            $this->pseudo = $infos['pseudo'] ?? '';
             $this->pwd = $infos['pwd'];
             $this->token = $infos['token'];
             $this->role = $infos['role'] ?? 'member'; // Rôle défini ou par défaut
@@ -61,6 +64,7 @@ class User implements JsonSerializable
         return [
             'id' => $this->id,
             'email' => $this->email,
+            'pseudo' => $this->pseudo, //Ajout de pseudo
             'pwd' => $this->pwd,
             'token' => $this->token,
             'role' => $this->role // Ajout du rôle

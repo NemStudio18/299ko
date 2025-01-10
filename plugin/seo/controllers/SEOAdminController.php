@@ -12,6 +12,10 @@ defined('ROOT') OR exit('No direct script access allowed');
 class SEOAdminController extends AdminController {
     
     public function home() {
+
+                        // Vérification si l'utilisateur est administrateur
+        $this->checkAccess('admin');
+        
         $response = new AdminResponse();
         $tpl = $response->createPluginTemplate('seo', 'admin');
 

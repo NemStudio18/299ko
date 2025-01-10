@@ -4,6 +4,8 @@
 		{{SHOW.tokenField}}
 		<label for="email">{{ Lang.users-mail}}</label>
 		<input type="email" id="email" name="email" required />
+		<label for="pseudo">{{Lang.pseudo}}</label>
+		<input type="text" id="pseudo" name="pseudo" required />
 		<label for="pwd">{{Lang.password}}</label>
 		<input type="text" id="pwd" name="pwd" required />
 		<button>{{Lang.submit}}</button>

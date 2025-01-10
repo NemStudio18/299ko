@@ -12,57 +12,64 @@ defined('ROOT') or exit('No direct script access allowed');
 class BlogReadController extends PublicController
 {
 
-    public function read($name, $id)
-    {
-        $antispam = ($this->pluginsManager->isActivePlugin('antispam')) ? new antispam() : false;
-        $newsManager = new newsManager();
-        $categoriesManager = new BlogCategoriesManager();
+public function read($name, $id)
+{
+    $antispam = ($this->pluginsManager->isActivePlugin('antispam')) ? new antispam() : false;
+    $newsManager = new newsManager();
+    $categoriesManager = new BlogCategoriesManager();
 
-        $item = $newsManager->create($id);
-        if (!$item) {
-            $this->core->error404();
-        }
-
-        $newsManager->loadComments($item->getId());
-        $this->addMetas($item);
-
-        $antispamField = ($antispam) ? $antispam->show() : '';
-        // Traitements divers : métas, fil d'ariane...
-        $this->runPlugin->setMainTitle($item->getName());
-        $this->runPlugin->setTitleTag($item->getName());
-
-        $generatedHTML = util::generateIdForTitle(htmlspecialchars_decode($item->getContent()));
-        $toc = $this->generateTOC($generatedHTML);
-
-        $categories = [];
-        foreach ($categoriesManager->getCategories() as $cat) {
-            if (in_array($item->getId(), $cat->items)) {
-                $categories[] = [
-                    'label' => $cat->label,
-                    'url' => $this->router->generate('blog-category', ['name' => util::strToUrl($cat->label), 'id' => $cat->id]),
-                ];
-            }
-        }
-        
-        $response = new PublicResponse();
-        $tpl = $response->createPluginTemplate('blog', 'read');
-
-        show::addSidebarPublicModule('Catégories du blog', $this->generateCategoriesSidebar());
-        show::addSidebarPublicModule('Derniers commentaires', $this->generateLastCommentsSidebar());
-
-        $tpl->set('antispam', $antispam);
-        $tpl->set('antispamField', $antispamField);
-        $tpl->set('item', $item);
-        $tpl->set('generatedHtml', $generatedHTML);
-        $tpl->set('TOC', $toc);
-        $tpl->set('categories', $categories);
-        $tpl->set('newsManager', $newsManager);
-        $tpl->set('commentSendUrl', $this->router->generate('blog-send'));
-
-        $response->addTemplate($tpl);
-        return $response;
-
+    $item = $newsManager->create($id);
+    if (!$item) {
+        $this->core->error404();
     }
+
+    $newsManager->loadComments($item->getId());
+    $this->addMetas($item);
+
+    $antispamField = ($antispam) ? $antispam->show() : '';
+    // Traitements divers : métas, fil d'ariane...
+    $this->runPlugin->setMainTitle($item->getName());
+    $this->runPlugin->setTitleTag($item->getName());
+
+    $generatedHTML = util::generateIdForTitle(htmlspecialchars_decode($item->getContent()));
+    $toc = $this->generateTOC($generatedHTML);
+
+    $categories = [];
+    foreach ($categoriesManager->getCategories() as $cat) {
+        if (in_array($item->getId(), $cat->items)) {
+            $categories[] = [
+                'label' => $cat->label,
+                'url' => $this->router->generate('blog-category', ['name' => util::strToUrl($cat->label), 'id' => $cat->id]),
+            ];
+        }
+    }
+    
+    $response = new PublicResponse();
+    $tpl = $response->createPluginTemplate('blog', 'read');
+
+    show::addSidebarPublicModule('Catégories du blog', $this->generateCategoriesSidebar());
+    show::addSidebarPublicModule('Derniers commentaires', $this->generateLastCommentsSidebar());
+
+    $tpl->set('antispam', $antispam);
+    $tpl->set('antispamField', $antispamField);
+    $tpl->set('item', $item);
+    $tpl->set('generatedHtml', $generatedHTML);
+    $tpl->set('TOC', $toc);
+    $tpl->set('categories', $categories);
+    $tpl->set('newsManager', $newsManager);
+    $tpl->set('commentSendUrl', $this->router->generate('blog-send'));
+
+    // Vérifier si l'utilisateur est connecté et a les rôles appropriés
+    $currentUser = UsersManager::getCurrentUser();
+    $canComment = false;
+    if ($currentUser) {
+        $canComment = $currentUser->hasRole('admin') || $currentUser->hasRole('modo') || $currentUser->hasRole('member') || $currentUser->hasRole('autor');
+    }
+    $tpl->set('canComment', $canComment);
+
+    $response->addTemplate($tpl);
+    return $response;
+}
 
     protected function generateTOC($html)
     {

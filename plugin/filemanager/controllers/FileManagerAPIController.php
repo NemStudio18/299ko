@@ -26,6 +26,8 @@ class FileManagerAPIController extends AdminController {
     protected $editor = false;
 
     public function home() {
+                        // Vérification si l'utilisateur est administrateur
+        $this->checkAccess('admin');
         return $this->render();
     }
 
