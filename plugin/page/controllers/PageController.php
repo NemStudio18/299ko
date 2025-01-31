@@ -4,10 +4,10 @@
  * @copyright (C) 2023, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
-defined('ROOT') or exit('No direct script access allowed');
+defined('ROOT') or exit('Access denied!');
 
 class PageController extends PublicController
 {
@@ -50,7 +50,7 @@ class PageController extends PublicController
         if ($action === 'unlock') {
             // quelques contrôle et temps mort volontaire avant le send...
             sleep(2);
-            if ($_POST['_password'] == '' && $_SERVER['HTTP_REFERER'] === $url) {
+            if ($_POST['_password'] == '' && $_SERVER['REQUEST_URI'] === $url) {
                 $this->page->unlock($this->pageItem, $_POST['password']);
             }
             header('location:' . $url);
