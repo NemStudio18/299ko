@@ -1,0 +1,9 @@
+{
+    "name" : "Gestionnaire de fichiers",
+    "icon" : "fa-regular fa-file",
+    "description" :"Un gestionnaire de fichiers pour télécharger et organiser vos médias",
+    "authorEmail" : "mx.koder@gmail.com",
+    "authorWebsite" : "https://299ko.ovh",
+    "version" : "2.0",
+    "homeAdminMethod" : "FileManagerAPIController#home"
+}

@@ -1,0 +1,9 @@
+{
+    "name" : "Plugins",
+    "icon" : "fa-solid fa-puzzle-piece",
+    "description" : "Gestion des plugins",
+    "authorEmail" : "",
+    "authorWebsite" : "",
+    "version" : "none",
+    "homeAdminMethod" : "PluginsManagerController#list"
+}

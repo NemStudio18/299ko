@@ -1,0 +1,8 @@
+{
+    "name": "TinyMCE",
+    "icon" : "fa-solid fa-spell-check",
+    "description": "Editeur WYSIWYG",
+    "authorEmail": "",
+    "authorWebsite": "",
+    "version": "2.0"
+}

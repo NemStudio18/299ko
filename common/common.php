@@ -1,4 +1,5 @@
 <?php
+namespace Common;
 
 /**
  * @copyright (C) 2024, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
@@ -17,24 +18,45 @@ define('BASE_PATH', rtrim(dirname($_SERVER['SCRIPT_NAME']), DIRECTORY_SEPARATOR)
 
 include_once(ROOT . 'common/config.php');
 
-// Autoload class in COMMON directory
-spl_autoload_register(function ($class) {
-	$className = strtolower($class);
-	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(COMMON));
-	foreach ($iterator as $file)
-	{
-		if ($file->isFile() && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-			$fileName = strtolower($file->getFilename());
-			if ($fileName === $className . '.php' || $fileName === $className . '.class.php') {
-				include_once($file);
-				break;
-			}
-		}
-	}
+// Définir les préfixes pour l'autoloader
+$prefixes = [
+    'Common\\' => ROOT . '/Common/',
+    'Plugins\\' => ROOT . '/Plugins/',
+];
+
+spl_autoload_register(function ($class) use ($prefixes) {
+    // Gestion des namespaces PSR-4
+    foreach ($prefixes as $prefix => $baseDir) {
+        if (strpos($class, $prefix) === 0) {
+            $relativeClass = substr($class, strlen($prefix));
+            $file = $baseDir . str_replace('\\', DIRECTORY_SEPARATOR, $relativeClass) . '.php';
+            if (file_exists($file)) {
+                require_once $file;
+                return;
+            }
+        }
+    }
+
+    // Gestion des classes sans namespace dans COMMON
+    $className = strtolower($class);
+    $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(COMMON));
+    foreach ($iterator as $file) {
+        if ($file->isFile() && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+            $fileName = strtolower($file->getFilename());
+            if ($fileName === $className . '.php' || $fileName === $className . '.class.php') {
+                require_once $file;
+                return;
+            }
+        }
+    }
 });
 
-$router = router::getInstance();
-$core = core::getInstance();
+use Common\Router\Router;
+use function Common\Router\generate;
+use Common\{Core, PluginsManager, Lang, Template};
+
+$router = Router::getInstance();
+$core = Core::getInstance();
 
 $pluginsManager = pluginsManager::getInstance();
 foreach ($pluginsManager->getPlugins() as $plugin) {
@@ -74,3 +96,4 @@ Template::addGlobal('ROUTER', $router);
 Template::addGlobal('pluginsManager', $pluginsManager);
 Template::addGlobal('CORE', $core);
 Template::addGlobal('ADMIN_PATH', ADMIN_PATH);
+Template::addGlobal('Lang', new Lang());

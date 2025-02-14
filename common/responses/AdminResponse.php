@@ -1,4 +1,7 @@
 <?php
+namespace Common\Responses;
+
+use Common\Template;
 
 /**
  * @copyright (C) 2024, 299Ko

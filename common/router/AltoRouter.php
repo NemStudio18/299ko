@@ -1,4 +1,8 @@
 <?php
+namespace Common\Router;
+
+use function Common\Router\{generate, compileRoute};
+
 /*
 MIT License
 
@@ -80,11 +84,11 @@ class AltoRouter
      */
     public function addRoutes($routes)
     {
-        if (!is_array($routes) && !$routes instanceof Traversable) {
+        if (!\is_array($routes) && !$routes instanceof Traversable) {
             throw new RuntimeException('Routes should be an array or an instance of Traversable');
         }
         foreach ($routes as $route) {
-            call_user_func_array([$this, 'map'], $route);
+            \call_user_func_array([$this, 'map'], $route);
         }
     }
 
@@ -105,7 +109,7 @@ class AltoRouter
      */
     public function addMatchTypes(array $matchTypes)
     {
-        $this->matchTypes = array_merge($this->matchTypes, $matchTypes);
+        $this->matchTypes = \array_merge($this->matchTypes, $matchTypes);
     }
 
     /**
@@ -156,23 +160,23 @@ class AltoRouter
         // prepend base path to route url again
         $url = $this->basePath . $route;
 
-        if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
+        if (\preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $index => $match) {
                 list($block, $pre, $type, $param, $optional) = $match;
 
                 if ($pre) {
-                    $block = substr($block, 1);
+                    $block = \substr($block, 1);
                 }
 
                 if (isset($params[$param])) {
                     // Part is found, replace for param value
-                    $url = str_replace($block, $params[$param], $url);
+                    $url = \str_replace($block, $params[$param], $url);
                 } elseif ($optional && $index !== 0) {
                     // Only strip preceding slash if it's not at the base
-                    $url = str_replace($pre . $block, '', $url);
+                    $url = \str_replace($pre . $block, '', $url);
                 } else {
                     // Strip match block
-                    $url = str_replace($block, '', $url);
+                    $url = \str_replace($block, '', $url);
                 }
             }
         }
@@ -197,14 +201,14 @@ class AltoRouter
         }
 
         // strip base path from request url
-        $requestUrl = substr($requestUrl, strlen($this->basePath));
+        $requestUrl = \substr($requestUrl, \strlen($this->basePath));
 
         // Strip query string (?a=b) from Request Url
-        if (($strpos = strpos($requestUrl, '?')) !== false) {
-            $requestUrl = substr($requestUrl, 0, $strpos);
+        if (($strpos = \strpos($requestUrl, '?')) !== false) {
+            $requestUrl = \substr($requestUrl, 0, $strpos);
         }
 
-        $lastRequestUrlChar = $requestUrl ? $requestUrl[strlen($requestUrl)-1] : '';
+        $lastRequestUrlChar = $requestUrl ? $requestUrl[\strlen($requestUrl)-1] : '';
 
         // set Request Method if it isn't passed as a parameter
         if ($requestMethod === null) {
@@ -214,7 +218,7 @@ class AltoRouter
         foreach ($this->routes as $handler) {
             list($methods, $route, $target, $name) = $handler;
 
-            $method_match = (stripos($methods, $requestMethod) !== false);
+            $method_match = (\stripos($methods, $requestMethod) !== false);
 
             // Method did not match, continue to next route.
             if (!$method_match) {
@@ -226,26 +230,26 @@ class AltoRouter
                 $match = true;
             } elseif (isset($route[0]) && $route[0] === '@') {
                 // @ regex delimiter
-                $pattern = '`' . substr($route, 1) . '`u';
-                $match = preg_match($pattern, $requestUrl, $params) === 1;
-            } elseif (($position = strpos($route, '[')) === false) {
+                $pattern = '`' . \substr($route, 1) . '`u';
+                $match = \preg_match($pattern, $requestUrl, $params) === 1;
+            } elseif (($position = \strpos($route, '[')) === false) {
                 // No params in url, do string comparison
-                $match = strcmp($requestUrl, $route) === 0;
+                $match = \strcmp($requestUrl, $route) === 0;
             } else {
                 // Compare longest non-param string with url before moving on to regex
-				// Check if last character before param is a slash, because it could be optional if param is optional too (see https://github.com/dannyvankooten/AltoRouter/issues/241)
-                if (strncmp($requestUrl, $route, $position) !== 0 && ($lastRequestUrlChar === '/' || $route[$position-1] !== '/')) {
+                // Check if last character before param is a slash, because it could be optional if param is optional too (see https://github.com/dannyvankooten/AltoRouter/issues/241)
+                if (\strncmp($requestUrl, $route, $position) !== 0 && ($lastRequestUrlChar === '/' || $route[$position-1] !== '/')) {
                     continue;
                 }
 
                 $regex = $this->compileRoute($route);
-                $match = preg_match($regex, $requestUrl, $params) === 1;
+                $match = \preg_match($regex, $requestUrl, $params) === 1;
             }
 
             if ($match) {
                 if ($params) {
                     foreach ($params as $key => $value) {
-                        if (is_numeric($key)) {
+                        if (\is_numeric($key)) {
                             unset($params[$key]);
                         }
                     }
@@ -269,7 +273,7 @@ class AltoRouter
      */
     protected function compileRoute($route)
     {
-        if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
+        if (\preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
             $matchTypes = $this->matchTypes;
             foreach ($matches as $match) {
                 list($block, $pre, $type, $param, $optional) = $match;
@@ -294,7 +298,7 @@ class AltoRouter
                         . ')'
                         . $optional;
 
-                $route = str_replace($block, $pattern, $route);
+                $route = \str_replace($block, $pattern, $route);
             }
         }
         return "`^$route$`u";

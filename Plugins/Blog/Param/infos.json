@@ -1,0 +1,10 @@
+{
+    "name" : "Blog",
+    "icon" : "fa-regular fa-newspaper",
+    "description" : "Blog management",
+    "authorEmail" : "",
+    "authorWebsite" : "",
+    "version" : "1.2",
+    "homePublicMethod" : "BlogListController#home",
+    "homeAdminMethod" : "BlogAdminPostsController#list"
+}

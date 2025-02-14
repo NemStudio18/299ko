@@ -1,0 +1,9 @@
+{
+    "name" : "Users",
+    "icon" : "fa-solid fa-users",
+    "description" : "Gestion des utilisateurs",
+    "authorEmail" : "mx.koder@gmail.com",
+    "authorWebsite" : "https://kodercloud.ovh",
+    "version" : "2.0",
+    "homeAdminMethod" : "UsersAdminController#home"
+}

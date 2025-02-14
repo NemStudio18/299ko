@@ -1,4 +1,7 @@
 <?php
+namespace Common\Responses;
+
+use Common\{Core, Template};
 
 /**
  * @copyright (C) 2024, 299Ko
@@ -48,7 +51,7 @@ class StringResponse extends Response {
         if (file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
-            $tpl = new Template(PLUGINS . $pluginName .'/template/' . $templateName . '.tpl');
+            $tpl = new Template(\Common\PLUGINS . $pluginName .'/template/' . $templateName . '.tpl');
         }
         return $tpl;
     }

@@ -1,4 +1,7 @@
 <?php
+namespace Common\Categories;
+
+use Common\Util;
 
 /**
  * @copyright (C) 2022, 299Ko
@@ -9,7 +12,7 @@
  */
 defined('ROOT') OR exit('Access denied!');
 
-abstract class Category implements JsonSerializable {
+abstract class Category implements \JsonSerializable {
 
     public $id;
     /**
@@ -75,22 +78,22 @@ abstract class Category implements JsonSerializable {
 
     public function outputAsCheckbox($itemId) {
         $catDisplay = 'sub';
-        require COMMON . 'categories/template/checkboxCategories.php';
+        require CAT_TPL . 'checkboxCategories.php';
     }
     
     public function outputAsSelect($parentId, $categorieId) {
         $catDisplay = 'sub';
-        require COMMON . 'categories/template/selectCategory.php';
+        require CAT_TPL . 'selectCategory.php';
     }
     
     public function outputAsSelectOne($itemId) {
         $catDisplay = 'sub';
-        require COMMON . 'categories/template/selectOneCategory.php';
+        require CAT_TPL . 'selectOneCategory.php';
     }
 
     public function outputAsList() {
         $catDisplay = 'sub';
-        require COMMON . 'categories/template/listCategories.php';
+        require CAT_TPL . 'listCategories.php';
     }
 
     public function getCategoryById(int $id) {

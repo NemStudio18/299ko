@@ -1,4 +1,7 @@
 <?php
+namespace Common\Controllers;
+
+use Common\{PluginsManager, Core};
 
 /**
  * @copyright (C) 2023, 299Ko

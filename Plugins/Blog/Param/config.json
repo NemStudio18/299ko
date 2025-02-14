@@ -1,0 +1,12 @@
+{
+    "priority" : "2",
+    "label" : "Blog",
+    "itemsByPage" : "5",
+    "displayTOC" : "no",
+    "hideContent" : "0",
+    "comments" : "1",
+    "authorName" : "",
+    "authorAvatar" : "",
+    "authorBio" : "",
+    "displayAuthor" : false
+}

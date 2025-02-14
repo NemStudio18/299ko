@@ -1,4 +1,8 @@
 <?php
+namespace Common;
+
+use Common\Core;
+use function filemanagerDisplayManagerButton;
 
 /**
  * @copyright (C) 2024, 299Ko

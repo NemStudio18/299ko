@@ -1,0 +1,9 @@
+{
+    "name" : "SEO",
+    "icon" : "fa-solid fa-magnifying-glass-chart",
+    "description" : "Ajoute des options liées au référencement et aux réseaux sociaux",
+    "authorEmail" : "",
+    "authorWebsite" : "",
+    "version" : "none",
+    "homeAdminMethod"  : "SEOAdminController#home"
+}

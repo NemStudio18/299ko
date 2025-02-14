@@ -1,0 +1,18 @@
+#content.galerie-admin a.category {
+    opacity: 0.75;
+    transition: opacity 0.4s ease;
+    background: #555;
+    color:#fff;
+    border-radius: 3px;
+    padding: 4px;
+    margin: 5px;
+    font-size: 12px;
+}
+
+#content.galerie-admin a.category:hover {
+    opacity: 1;
+}
+
+#content.galerie-admin a.category > i {
+    margin-right: 4px;
+}

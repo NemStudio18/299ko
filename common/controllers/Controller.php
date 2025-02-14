@@ -1,4 +1,8 @@
 <?php
+namespace Common\Controllers;
+
+use Common\Router\Router;
+use Common\{Core, PluginsManager};
 
 /**
  * @copyright (C) 2024, 299Ko

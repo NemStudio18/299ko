@@ -1,4 +1,8 @@
 <?php
+namespace Common\Controllers;
+
+use Common\PluginsManager;
+use Plugins\Users\Entities\UsersManager;
 
 /**
  * @copyright (C) 2024, 299Ko

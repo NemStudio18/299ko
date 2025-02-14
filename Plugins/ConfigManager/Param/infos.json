@@ -1,0 +1,9 @@
+{
+    "name" : "Configuration",
+    "icon" : "fa-solid fa-gears",
+    "description" : "Gestion de la configuration",
+    "authorEmail" : "",
+    "authorWebsite" : "",
+    "version" : "none",
+    "homeAdminMethod" : "ConfigManagerAdminController#home"
+}

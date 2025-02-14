@@ -1,0 +1,10 @@
+{
+    "name" : "Galerie",
+    "icon" : "fa-regular fa-images",
+    "description" : "Une galerie photos simple et épurée",
+    "authorEmail" : "",
+    "authorWebsite" : "",
+    "version" : "2.0",
+    "homePublicMethod" : "GalerieController#home",
+    "homeAdminMethod" : "GalerieAdminController#home"
+}

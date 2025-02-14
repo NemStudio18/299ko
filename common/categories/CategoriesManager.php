@@ -1,4 +1,7 @@
 <?php
+namespace Common\Categories;
+
+use Common\{Core, Util};
 
 /**
  * @copyright (C) 2022, 299Ko
@@ -210,28 +213,28 @@ abstract class CategoriesManager {
     public function outputAsCheckbox($itemId = 0) {
         $catDisplay = 'root';
         ob_start();
-        require COMMON . 'categories/template/checkboxCategories.php';
+        require CAT_TPL . 'checkboxCategories.php';
         return ob_get_clean();
     }
 
     public function outputAsSelect($parentId, $categoryId, $fieldName = "parentId") {
         $catDisplay = 'root';
         ob_start();
-        require COMMON . 'categories/template/selectCategory.php';
+        require CAT_TPL . 'selectCategory.php';
         return ob_get_clean();
     }
     
     public function outputAsSelectOne($itemId, $fieldName = 'category-one') {
         $catDisplay = 'root';
         ob_start();
-        require COMMON . 'categories/template/selectOneCategory.php';
+        require CAT_TPL . 'selectOneCategory.php';
         return ob_get_clean();
     }
 
     public function outputAsList() {
         $catDisplay = 'root';
         ob_start();
-        require COMMON . 'categories/template/listCategories.php';
+        require CAT_TPL . 'listCategories.php';
         return ob_get_clean();
     }
 

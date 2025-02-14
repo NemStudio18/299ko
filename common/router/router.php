@@ -1,4 +1,9 @@
 <?php
+namespace Common\Router;
+
+use Common\Router\Router;
+use function Common\Router\generate;
+Use Common\Router\AltoRouter;
 
 /**
  * @copyright (C) 2024, 299Ko
@@ -9,7 +14,7 @@
  */
 defined('ROOT') OR exit('Access denied!');
 
-class router extends AltoRouter {
+class Router extends AltoRouter {
 
     /**
      * 

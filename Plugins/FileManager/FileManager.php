@@ -1,0 +1,42 @@
+<?php
+namespace Plugins\FileManager;
+
+use Common\Router\Router;
+use Plugins\Users\Entities\UsersManager;
+use function Common\Router\generate;
+use Plugins\FileManager\filemanagerDisplayManagerButton as filemanagerdisplaymanagerbutton;
+use Common\{Util, Lang};
+use function Plugins\FileManager\{filemanagerInstall, filemanagerDisplayManagerButton};
+
+/**
+ * @copyright (C) 2024, 299Ko
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
+ * @author Maxence Cauderlier <mx.koder@gmail.com>
+ * 
+ * @package 299Ko https://github.com/299Ko/299ko
+ */
+defined('ROOT') OR exit('Access denied!');
+
+require_once(\Common\PLUGINS . 'filemanager/lib/FileManager.php');
+
+/**
+ * Install function
+ */
+function filemanagerInstall() {
+    if (!file_exists(\Common\DATA_PLUGIN . 'filemanager/files.json')) {
+        @mkdir(\Common\UPLOAD . 'files/');
+        @chmod(\Common\UPLOAD . 'files', 0755);
+        util::writeJsonFile(\Common\DATA_PLUGIN . 'filemanager/files.json', []);
+    }
+}
+
+/**
+ * Function to display the button to manage files by Ajax
+ */
+function filemanagerDisplayManagerButton($textareaId = false):string {
+    return '<a class="button fmUploadButton" data-fancybox data-type="ajax" '
+    . 'href="' . router::getInstance()->generate('filemanager-view-ajax-home', 
+    ['token' => UsersManager::getCurrentUser()->token,
+    'editor' => $textareaId]) .'"/><i class="fa-solid fa-file-image"></i> '. lang::get('filemanager.button-label').'</a>';
+    
+}
