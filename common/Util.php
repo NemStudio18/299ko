@@ -2,7 +2,6 @@
 namespace Common;
 
 use function Common\logg;
-use Common\{Util, Lang, Core};
 
 /**
  * @copyright (C) 2022, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
@@ -11,7 +10,7 @@ use Common\{Util, Lang, Core};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
@@ -42,7 +41,7 @@ class Util
     /**
      * Truncate an HTML content and keep only the <p> and <br> tags
      * It save the new lines and dont cut on a word
-     * 
+     *
      * @param  string $str      Content to truncate
      * @param  int    $length   Number of characters to keep
      * @param  string $add      Text to add after the content if truncated
@@ -110,7 +109,7 @@ class Util
 
     /**
      * List a directory and return an array with files and folders (separated). This function is not recursive
-     * 
+     *
      * @param string $folder Path to scan
      * @param array $not Array of files to exclude
      * @return array $data['dir] : Directories / $data['file'] : Files
@@ -194,11 +193,11 @@ class Util
     public static function getTimestampFromDate($date) {
         if (is_int($date)) {
             // Date from timestamp
-            $dateObj = new DateTime();
+            $dateObj = new \DateTime();
             $dateObj->setTimestamp($date);
         } else {
             // Date from string, old version
-            $dateObj = new DateTime($date);
+            $dateObj = new \DateTime($date);
         }
         return $dateObj->getTimestamp();
     }
@@ -206,11 +205,11 @@ class Util
     public static function getDateHour($date) {
         if (is_int($date)) {
             // Date from timestamp
-            $dateObj = new DateTime();
+            $dateObj = new \DateTime();
             $dateObj->setTimestamp($date);
         } else {
             // Date from string, old version
-            $dateObj = new DateTime($date);
+            $dateObj = new \DateTime($date);
         }
         return $dateObj->format(Lang::get("date-hour-format"));
     }
@@ -218,11 +217,11 @@ class Util
     public static function getDate($date) :string {
         if (is_int($date)) {
             // Date from timestamp
-            $dateObj = new DateTime();
+            $dateObj = new \DateTime();
             $dateObj->setTimestamp($date);
         } else {
             // Date from string, old version
-            $dateObj = new DateTime($date);
+            $dateObj = new \DateTime($date);
         }
         return $dateObj->format(Lang::get("date-only"));
     }
@@ -230,19 +229,19 @@ class Util
     public static function getNaturalDate($date) {
         if (is_int($date)) {
             // Date from timestamp
-            $dateObj = new DateTime();
+            $dateObj = new \DateTime();
             $dateObj->setTimestamp($date);
         } else {
             // Date from string, old version
-            $dateObj = new DateTime($date);
+            $dateObj = new \DateTime($date);
         }
-        $cal = IntlCalendar::fromDateTime($dateObj->format('Y-m-d H:i:s'));
-        return IntlDateFormatter::formatObject($cal, Lang::get("date-natural-date-hour-format"), Lang::get('locale'));
+        $cal = \IntlCalendar::fromDateTime($dateObj->format('Y-m-d H:i:s'));
+        return \IntlDateFormatter::formatObject($cal, Lang::get("date-natural-date-hour-format"), Lang::get('locale'));
     }
 
     /**
      * Build absolute URL with siteURL saved in config.json
-     * 
+     *
      * @param  string URI
      * @param  bool   is Admin location
      * @return string URL
@@ -263,7 +262,7 @@ class Util
 
     /**
      * Return current page URL
-     * 
+     *
      * @return string
      */
     public static function getCurrentURL()
@@ -376,7 +375,7 @@ class Util
             }
             $current_level = $level;
         }
-        
+
         if (!isset($level)) {
             // No heading
             return false;

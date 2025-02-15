@@ -7,7 +7,7 @@ use function Common\logg;
  * @copyright (C) 2023, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -19,15 +19,15 @@ class UpdaterManager {
      * @var string
      */
     public $lastVersion;
-    
+
     /**
      * Future version ready to install, depending actual version
      * @var string
      */
     public $nextVersion;
-    
+
     /**
-     * File `versions/main/core/versions.json` 
+     * File `versions/main/core/versions.json`
      * @var array
      */
     protected $metaDatas;
@@ -80,13 +80,13 @@ class UpdaterManager {
         if ($nextVersion === false) {
             return false;
         }
-        
+
         $rawFiles = $this->getRemoteFileContent(self::REMOTE . 'versions/main/core/' . $nextVersion . '/files.json', 'ERROR');
         if ($rawFiles === false) {
             return false;
         }
         $files = json_decode($rawFiles, true);
-        
+
         logg("Begin update to v$nextVersion", 'INFO');
         if (!$this->runBeforeChangeFiles($nextVersion)) {
             logg('Update aborted', 'ERROR');
@@ -132,23 +132,23 @@ class UpdaterManager {
     protected function treatPlugin($filename, $ignoreExist) {
         preg_match('/^plugin\/(\w+)\/(.*)$/i', $filename, $matches);
         $plugin = $matches[1];
-        if (is_dir(\Common\PLUGINS . $plugin) === false && $ignoreExist === false) {
+        if (is_dir(PLUGINS . $plugin) === false && $ignoreExist === false) {
             // plugin is not installed, no treatment
             return false;
         }
         return PLUGINS . $plugin . '/' . $matches[2];
     }
-    
+
     protected function treatTheme($filename) {
         preg_match('/^theme\/(.*)$/i', $filename, $matches);
         return THEMES . $matches[1];
     }
-    
+
     // protected function treatCore($filename) {
     //     preg_match('/^core\/(.*)$/i', $filename, $matches);
     //     return CORE . $matches[1];
     // }
-    
+
     protected function treatCommon($filename) {
         preg_match('/^common\/(.*)$/i', $filename, $matches);
         return COMMON . $matches[1];
@@ -174,7 +174,7 @@ class UpdaterManager {
         logg("unable to write $localFileName", 'ERROR');
         return false;
     }
-    
+
     protected function processAdd($file, $version) {
         $localFileName = $this->rewritePathFile($file, true);
         $remoteFile = $this->getRemoteFile($file, $version);
@@ -191,7 +191,7 @@ class UpdaterManager {
         logg("unable to write $localFileName", 'ERROR');
         return false;
     }
-    
+
     protected function processDelete($file) {
         $localFileName = $this->rewritePathFile($file);
         if ($localFileName === false) {
@@ -205,7 +205,7 @@ class UpdaterManager {
         logg("unable to delete $localFileName", 'ERROR');
         return false;
     }
-    
+
     /**
      * Create nested directories for a file, with full relative path
      * @param string Path File
@@ -225,7 +225,7 @@ class UpdaterManager {
             }
         }
     }
-    
+
     /**
      * Delete Folder from a file path, if folder is empty
      * @param string Path File
@@ -249,7 +249,7 @@ class UpdaterManager {
     /**
      * Get the content of a remote file by its URL
      * Log if file is not found
-     * 
+     *
      * @param string File URL
      * @param string Severity Log message
      * @return mixed Content or false
@@ -276,7 +276,7 @@ class UpdaterManager {
         }
         return $content;
     }
-    
+
     protected function runBeforeChangeFiles($nextVersion) {
         $remoteFile = self::REMOTE . 'versions/main/core/' . $nextVersion .'/_beforeChangeFiles.php';
         $content = $this->getRemoteFileContent($remoteFile);
@@ -292,7 +292,7 @@ class UpdaterManager {
         }
         return false;
     }
-    
+
     protected function runAfterChangeFiles($nextVersion) {
         $remoteFile = self::REMOTE . 'versions/main/core/' . $nextVersion .'/_afterChangeFiles.php';
         $content = $this->getRemoteFileContent($remoteFile);

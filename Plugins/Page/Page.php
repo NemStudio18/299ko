@@ -15,7 +15,7 @@ use function Plugins\Page\{pageInstall, pageEndFrontHead};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -72,7 +72,7 @@ class page {
     private $pagesFile;
 
     public function __construct() {
-        $this->pagesFile = \Common\DATA_PLUGIN . 'page/pages.json';
+        $this->pagesFile = DATA_PLUGIN . 'page/pages.json';
         $this->items = $this->loadPages();
     }
 
@@ -440,7 +440,7 @@ class pageItem {
     public function getId() {
         return $this->id;
     }
-    
+
     public function setId($id) {
         $this->id = $id;
     }
@@ -522,7 +522,7 @@ class pageItem {
             return 'parent';
         elseif (filter_var($this->target, FILTER_VALIDATE_URL) || $this->target == 'url')
             return 'url';
-        else 
+        else
             return 'plugin';
     }
 

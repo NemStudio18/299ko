@@ -8,15 +8,15 @@ use Plugins\Users\Entities\User;
  * @copyright (C) 2024, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
 
 /**
  * UsersManager provides methods for user management and authentication.
- * 
- * It handles login/logout, retrieving user objects, password encryption, 
+ *
+ * It handles login/logout, retrieving user objects, password encryption,
  * auth tokens, and persistence of user data.
  */
 class UsersManager
@@ -25,11 +25,11 @@ class UsersManager
     /**
      * Path file where users are stored
      */
-    protected static $file = \Common\DATA_PLUGIN . 'users/users.json';
+    protected static $file = DATA_PLUGIN . 'users/users.json';
 
     /**
      * Logs in a user with the provided email and password.
-     * 
+     *
      * @param string $email The user's email address
      * @param string $password The user's password
      * @param bool $useCookies Whether to set auth cookies after successful login

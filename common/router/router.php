@@ -1,15 +1,11 @@
 <?php
 namespace Common\Router;
 
-use Common\Router\Router;
-use function Common\Router\generate;
-Use Common\Router\AltoRouter;
-
 /**
  * @copyright (C) 2024, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -17,7 +13,7 @@ defined('ROOT') OR exit('Access denied!');
 class Router extends AltoRouter {
 
     /**
-     * 
+     *
      * @var \router
      */
     private static $instance;
@@ -39,7 +35,7 @@ class Router extends AltoRouter {
         $this->map('GET', '/index.php[/?]', 'CoreController#renderHome');
         $this->map('GET', '/admin/', 'CoreController#renderAdminHome', 'admin');
     }
-    
+
     public function getCleanURI() {
         $requestUrl = self::$url;
         return substr($requestUrl, strlen($this->basePath));
@@ -58,7 +54,7 @@ class Router extends AltoRouter {
 
     /**
      * Return Core Instance
-     * 
+     *
      * @return \self
      */
     public static function getInstance() {

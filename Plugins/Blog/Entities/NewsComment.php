@@ -10,7 +10,7 @@ use Common\Template;
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
@@ -57,7 +57,7 @@ NewsComment
 
     public function show()
     {
-        $tpl = new Template(\Common\PLUGINS . 'blog/template/comment.tpl');
+        $tpl = new Template(PLUGINS . 'blog/template/comment.tpl');
         $tpl->set('comment', $this);
         echo $tpl->output();
     }

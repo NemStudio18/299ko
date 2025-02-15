@@ -1,8 +1,6 @@
 <?php
 namespace Common;
 
-use Common\Lang;
-
 /**
  * @copyright (C) 2023, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
@@ -10,13 +8,13 @@ use Common\Lang;
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
 
 class Lang {
-    
+
 
     /**
      * Translation name, like 'en' or 'fr'
@@ -31,13 +29,13 @@ class Lang {
      * @var array
      */
     protected static $data = [];
-    
+
     public static $availablesLocales = [
         'fr' => 'Français',
         'en' => 'English',
         'ru' => 'Russian'
     ];
-    
+
     /**
      * Set the language locale
      * @param string $locale
@@ -46,7 +44,7 @@ class Lang {
         self::$locale = $locale;
         setlocale(LC_ALL, $locale);
     }
-    
+
     /**
      * Get the current language locale
      * @return string
@@ -64,11 +62,11 @@ class Lang {
     {
         return self::$availablesLocales;
     }
-    
+
     /**
      * Load a language .ini file
      * If locale is set to 'en', will load $folderPath . 'en.ini'
-     * 
+     *
      * @param string Folder Path where file can be found
      * @return bool File loaded or not
      */
@@ -81,16 +79,16 @@ class Lang {
         }
         return false;
     }
-    
+
     /**
      * Get a string from a locale file
-     * 
+     *
      * @param string Name of var
      * @param string Parameters
      * Eg: Lang::get('test', 'one', 'two')
      * @return string
      */
-    public static function get($name) {        
+    public static function get($name) {
         if (!isset(self::$data[$name])) {
             return $name;
         }
