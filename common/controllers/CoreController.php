@@ -7,7 +7,7 @@ use Common\{PluginsManager, Core};
  * @copyright (C) 2023, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
@@ -15,13 +15,13 @@ defined('ROOT') or exit('Access denied!');
 class CoreController extends Controller
 {
 
-    protected plugin $defaultPlugin;
+    protected \Common\Plugin $defaultPlugin;
 
     public function __construct() {
+
         parent::__construct();
         $pluginName = $this->core->getPluginToCall();
-
-        if (pluginsManager::isActivePlugin($pluginName)) {
+        if (PluginsManager::isActivePlugin($pluginName)) {
             $this->defaultPlugin = $this->pluginsManager->getPlugin($pluginName);
         } else {
             $this->core->error404();
@@ -38,7 +38,7 @@ class CoreController extends Controller
                 return $response;
             }
         }
-        core::getInstance()->error404();
+        Core::getInstance()->error404();
     }
 
     public function renderAdminHome()
@@ -51,6 +51,6 @@ class CoreController extends Controller
                 return $response;
             }
         }
-        core::getInstance()->error404();
+        Core::getInstance()->error404();
     }
 }

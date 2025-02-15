@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="{{ lang.getLocale}}">
+<html lang="{{ Lang.getLocale}}">
 	<head>
 		{% HOOK.frontHead %}
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>{{ SHOW.titleTag }}</title>
+		<title>{{ Show.titleTag }}</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
-		<meta name="description" content="{{ SHOW.metaDescriptionTag }}"/>
-		<link rel="icon" href="{{ SHOW.themeIcon }}"/>
-		<base href="{{ SHOW.siteUrl }}/">
-		{{ SHOW.linkTags }}
-		{{ SHOW.scriptTags }}
-		{{ SHOW.showMetas }}
+		<meta name="description" content="{{ Show.metaDescriptionTag }}"/>
+		<link rel="icon" href="{{ Show.themeIcon }}"/>
+		<base href="{{ Show.siteUrl }}/">
+		{{ Show.linkTags }}
+		{{ Show.scriptTags }}
+		{{ Show.showMetas }}
 		{% HOOK.endFrontHead %}
 	</head>
 	<body>
@@ -19,30 +19,30 @@
 				<nav id="header_content">
 					<button id="mobile_menu" aria-label="{{ Lang.site-menu-label }}"></button>
 					<p id="siteName">
-						<a href="{{ SHOW.siteUrl }}">{{ SHOW.siteName }}</a>
+						<a href="{{ Show.siteUrl }}">{{ Show.siteName }}</a>
 					</p>
 					<ul id="navigation">
-						{{ SHOW.mainNavigation }}
+						{{ Show.mainNavigation }}
 						{% HOOK.endMainNavigation %}
 					</ul>
 				</nav>
 			</div>
 			<div id="alert-msg">
-				{{ SHOW.displayMsg }}
+				{{ Show.displayMsg }}
 			</div>
 			<div id="banner">
 				<div id="siteDesc">
-					{{ SHOW.siteDesc}}
+					{{ Show.siteDesc}}
 				</div>
 			</div>
 			<main id="body">
 				{% IF CORE.getConfigVal(hideTitles) == 0 %}
 					<div id="pageTitle">
-						{{ SHOW.mainTitle }}
+						{{ Show.mainTitle }}
 					</div>
 				{% ENDIF %}
 				<div id="body-page">
-					<div id="content" class="{{ SHOW.pluginId }}">
+					<div id="content" class="{{ Show.pluginId }}">
 						{{ CONTENT }}
 					</div>
 					{{ show.displayPublicSidebar() }}
@@ -55,7 +55,7 @@
 						<a target='_blank' href='https://299ko.ovh'>{{ Lang.site-just-using( ) }}</a>
 						-
 						{{ Lang.site-theme }}
-						{{ SHOW.theme }}
+						{{ Show.theme }}
 						-
 						{% if IS_LOGGED %}
 							<a rel="nofollow" href="{{ ROUTER.generate("logout") }}">{{ Lang.core-disconnection }}</a>

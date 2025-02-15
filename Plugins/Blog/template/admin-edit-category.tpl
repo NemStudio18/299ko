@@ -26,7 +26,7 @@
         if (result.status === 202) {
             Toastify({
                 text: "{{ Lang.core-item-edited }}",
-                className: "success"		
+                className: "success"
             }).showToast();
             // Refresh list
             Fancybox.close();
@@ -39,8 +39,8 @@
         } else {
             Toastify({
                 text: "{{ Lang.core-item-not-edited }}",
-                className: "error"		
+                className: "error"
             }).showToast();
-        }	
+        }
     };
 </script>

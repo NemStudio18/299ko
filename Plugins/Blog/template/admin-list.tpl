@@ -73,14 +73,14 @@ async function BlogDeletePost(id) {
 			fadeOut(document.querySelector('#post' + id));
 			Toastify({
 				text: "{{ Lang.core-item-deleted}}",
-				className: "success"		
+				className: "success"
 			}).showToast();
 		} else {
 			Toastify({
 				text: "{{ Lang.core-item-not-deleted}}",
-				className: "error"		
+				className: "error"
 			}).showToast();
-		}				
+		}
 	};
 }
 </script>

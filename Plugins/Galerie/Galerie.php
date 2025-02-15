@@ -2,8 +2,6 @@
 namespace Plugins\Galerie;
 
 use Common\{Util, Editor, Lang, PluginsManager};
-use Plugins\Galerie\{GalerieItem, Galerie};
-use function Plugins\Galerie\{galerieInstall, galerieEndFrontHead, galerieGenerateEditor, galerieResize};
 
 /**
  * @copyright (C) 2022, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
@@ -12,7 +10,7 @@ use function Plugins\Galerie\{galerieInstall, galerieEndFrontHead, galerieGenera
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -31,7 +29,7 @@ function galerieInstall() {
 ## Hooks
 
 function galerieEndFrontHead() {
-    
+
 }
 
 function galerieGenerateEditor() {
@@ -80,7 +78,7 @@ class galerie {
     public function saveItem($obj) {
         $id = $obj->getId();
         if ($id == '') {
-            
+
             $obj->setId(uniqid());
             $upload = util::uploadFile('file', UPLOAD . 'galerie/', $obj->getId(), ['extensions' => ["gif", "png", "jpg", "jpeg"]]);
             if ($upload == 'success') {
@@ -320,7 +318,7 @@ function galerieResize($image_path,$image_dest,$max_size = 800,$qualite = 100,$t
 
   // Test si l'extension est autorisée
   if (in_array($extension,$extensions) && in_array($image_data['mime'],$mimes)):
-    
+
     // On stocke les dimensions dans des variables
     $img_width = $image_data[0];
     $img_height = $image_data[1];
@@ -393,7 +391,7 @@ function galerieResize($image_path,$image_dest,$max_size = 800,$qualite = 100,$t
       }
 
       return 'success';
-      
+
     else:
       return 'resize_error';
     endif;

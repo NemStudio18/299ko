@@ -1,14 +1,14 @@
 <?php
 namespace Common\Controllers;
 
-use Common\PluginsManager;
+use Common\{PluginsManager, Plugin};
 use Plugins\Users\Entities\UsersManager;
 
 /**
  * @copyright (C) 2024, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -17,15 +17,15 @@ class AdminController extends Controller {
 
     /**
      * Current plugin instance
-     * @var plugin
+     * @var Plugin
      */
-    protected plugin $runPlugin;
+    protected Plugin $runPlugin;
 
     /**
      * Current User
-     * @var User
+     * @var \Plugins\Users\Entities\User
      */
-    protected User $user;
+    protected \Plugins\Users\Entities\User $user;
 
     public function __construct() {
         parent::__construct();
@@ -44,5 +44,5 @@ class AdminController extends Controller {
         }
         $this->user = UsersManager::getCurrentUser();
     }
-        
+
 }

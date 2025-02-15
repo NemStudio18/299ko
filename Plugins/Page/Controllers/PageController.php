@@ -9,29 +9,29 @@ use Common\{Util, Template};
  * @copyright (C) 2023, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
 
-class PageController extends PublicController
+class PageController extends \Common\Controllers\PublicController
 {
 
     /**
      * page Object
-     * @var page
+     * @var \Plugins\Page\Page
      */
-    protected page $page;
+    protected \Plugins\Page\Page $page;
 
     /**
      * pageItem Object
-     * @var pageItem
+     * @var \Plugins\Page\PageItem
      */
-    protected pageItem $pageItem;
+    protected \Plugins\Page\PageItem $pageItem;
 
     public function home()
     {
-        $this->page = new page();
+        $this->page = new Page();
         $this->pageItem = $this->page->createHomepage();
 
         return $this->renderPage();
@@ -39,7 +39,7 @@ class PageController extends PublicController
 
     public function read($name, $id)
     {
-        $this->page = new page();
+        $this->page = new Page();
         $this->pageItem = $this->page->create($id);
 
         return $this->renderPage();

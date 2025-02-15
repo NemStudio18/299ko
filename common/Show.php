@@ -11,7 +11,7 @@ use Common\{Core, PluginsManager, Util, Lang};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -22,10 +22,10 @@ class Show {
      * @var array Modules
      */
     protected static $sidebarPublicModules = [];
-    
+
     /**
      * Add a message to display in the next view, saved in session
-     * 
+     *
      * Class can be error, success, info (default), warning
      *
      * @param string Message Content
@@ -69,7 +69,7 @@ class Show {
         if (function_exists('linkTags'))
             call_user_func('linkTags');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             $pluginsManager = pluginsManager::getInstance();
             foreach ($core->getCss() as $k => $v) {
                 echo '<link href="' . util::urlBuild($v) . '" rel="stylesheet" type="text/css" />';
@@ -92,7 +92,7 @@ class Show {
         if (function_exists('scriptTags'))
             call_user_func('scriptTags');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             $pluginsManager = pluginsManager::getInstance();
             foreach ($core->getJs() as $k => $v) {
                 echo '<script type="text/javascript" src="' . util::urlBuild($v) . '"></script>';
@@ -108,10 +108,10 @@ class Show {
                 echo '<script type="text/javascript" src="' . $core->getConfigVal('siteUrl') . '/' . 'theme/' . $core->getConfigVal('theme') . '/scripts.js' . '"></script>';
         }
     }
-    
+
     public static function showMetas() {
         $str = '';
-        $core = core::getInstance();
+        $core = Core::getInstance();
         foreach ($core->getMetas() as $meta) {
             $str .= $meta . "\n";
         }
@@ -134,7 +134,7 @@ class Show {
         if (function_exists('titleTag'))
             call_user_func('titleTag');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             global $runPlugin;
             if (!$runPlugin)
                 echo Lang::get('core-404-title');
@@ -149,7 +149,7 @@ class Show {
         if (function_exists('metaDescriptionTag'))
             call_user_func('metaDescriptionTag');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             global $runPlugin;
             if (!$runPlugin)
                 echo '404';
@@ -164,7 +164,7 @@ class Show {
         if (function_exists('mainTitle'))
             call_user_func('mainTitle', $format);
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             global $runPlugin;
             $data = $format;
             if (!$runPlugin)
@@ -186,16 +186,16 @@ class Show {
         if (function_exists('siteName'))
             call_user_func('siteName');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             echo $core->getConfigVal('siteName');
         }
     }
-    
+
     public static function siteDesc() {
         if (function_exists('siteDesc'))
             call_user_func('siteDesc');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             echo $core->getConfigVal('siteDesc');
         }
     }
@@ -206,7 +206,7 @@ class Show {
         if (function_exists('siteUrl'))
             call_user_func('siteUrl');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             echo $core->getConfigVal('siteUrl');
         }
     }
@@ -218,7 +218,7 @@ class Show {
             call_user_func('mainNavigation', $format);
         else {
             $pluginsManager = pluginsManager::getInstance();
-            $core = core::getInstance();
+            $core = Core::getInstance();
             $data = '';
             foreach ($pluginsManager->getPlugins() as $k => $plugin)
                 if ($plugin->getConfigval('activate') == 1) {
@@ -257,7 +257,7 @@ class Show {
 
     /**
      * Display the Administration items
-     * 
+     *
      * It only display the <li> items. You have to put it between <ul>.
      * Links are sorted by plugin's name, and current plugin had li.activePlugin class
      */
@@ -276,13 +276,13 @@ class Show {
                 }
             }
             ksort($arrPlugins, SORT_STRING);
-            $currentPlugin = core::getInstance()->getPluginToCall();
+            $currentPlugin = Core::getInstance()->getPluginToCall();
             foreach ($arrPlugins as $label) {
                 $data .= '<li';
                 if ($currentPlugin === $label['name']) {
                     $data .= ' class="activePlugin"';
                 }
-                $data .= '><a href="' . core::getInstance()->getConfigVal('siteUrl') . '/admin/'. $label['name'] . '"' ;
+                $data .= '><a href="' . Core::getInstance()->getConfigVal('siteUrl') . '/admin/'. $label['name'] . '"' ;
                 if ($currentPlugin === $label['name']) {
                     $data .= ' aria-current="page"';
                 }
@@ -304,7 +304,7 @@ class Show {
         if (function_exists('theme'))
             call_user_func('theme', $format);
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             $data = $format;
             $data = str_replace('[authorWebsite]', $core->getThemeInfo('authorWebsite'), $data);
             $data = str_replace('[name]', $core->getThemeInfo('name'), $data);
@@ -319,7 +319,7 @@ class Show {
         if (function_exists('pluginId'))
             call_user_func('pluginId');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             global $runPlugin;
             if (!$runPlugin)
                 echo '';
@@ -334,7 +334,7 @@ class Show {
         if (function_exists('currentUrl'))
             call_user_func('currentUrl');
         else {
-            $core = core::getInstance();
+            $core = Core::getInstance();
             echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         }
     }
@@ -344,15 +344,15 @@ class Show {
     public static function themeIcon() {
         if (function_exists('themeIcon'))
             call_user_func('themeIcon');
-        $core = core::getInstance();
+        $core = Core::getInstance();
         $icon = 'theme/' . $core->getConfigVal('theme') . '/icon.png';
         if (file_exists($icon))
             echo util::urlBuild($icon);
     }
-    
+
     /**
      * Add a module in the Public Sidebar
-     * 
+     *
      * @param string Title
      * @param string Content
      */

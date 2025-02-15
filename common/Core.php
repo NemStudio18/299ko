@@ -464,7 +464,7 @@ class Core
  */
 function logg($message, $severity = 'INFO')
 {
-    core::getInstance()->log($message, $severity);
+    Core::getInstance()->log($message, $severity);
 }
 
 /**

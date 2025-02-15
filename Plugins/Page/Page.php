@@ -3,10 +3,7 @@ namespace Plugins\Page;
 
 use Plugins\Galerie\Galerie;
 use Common\Router\Router;
-use function Common\Router\generate;
-use Plugins\Page\{Page, PageItem};
 use Common\{Lang, Core, PluginsManager, Util};
-use function Plugins\Page\{pageInstall, pageEndFrontHead};
 
 /**
  * @copyright (C) 2022, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
@@ -55,9 +52,9 @@ function pageEndFrontHead() {
         if ($pageItem && $pageItem->getNoIndex()) {
             echo '<meta name="robots" content="noindex"><meta name="googlebot" content="noindex">';
         }
-        $core = core::getInstance();
+        $core = Core::getInstance();
         $pluginsManager = pluginsManager::getInstance();
-        if ($pageItem && $pluginsManager->isActivePlugin('galerie') && galerie::searchByfileName($pageItem->getImg()))
+        if ($pageItem && $pluginsManager->isActivePlugin('galerie') && Galerie::searchByfileName($pageItem->getImg()))
             echo '<meta property="og:image" content="' . $core->getConfigVal('siteUrl') . '/' . str_replace('./', '', UPLOAD) . 'galerie/' . $pageItem->getImg() . '" />';
     }
 }
@@ -107,7 +104,7 @@ class page {
                     // no item !
                 } else {
                     $url = ($pageItem->targetIs() == 'parent') ? $pageItem->getTarget() : $page->makeUrl($pageItem);
-                    $pluginsManager->getPlugin('Page')->addToNavigation($pageItem->getName(), $url, $pageItem->getTargetAttr(), $pageItem->getId(), $pageItem->getParent(), $pageItem->getCssClass());/*// Par ce code :
+                    $pluginsManager->getPlugin('page')->addToNavigation($pageItem->getName(), $url, $pageItem->getTargetAttr(), $pageItem->getId(), $pageItem->getParent(), $pageItem->getCssClass());/*// Par ce code :
 $pluginPage = $pluginsManager->getPlugin('page');
 if ($pluginPage) {
     $pluginPage->addToNavigation(
@@ -246,7 +243,7 @@ if ($pluginPage) {
     }
 
     public function listTemplates() {
-        $core = core::getInstance();
+        $core = Core::getInstance();
         $data = [];
         $items = util::scanDir(THEMES . $core->getConfigVal('theme') . '/', ['404.tpl', 'layout.tpl']);
         foreach ($items['file'] as $file) {
@@ -257,7 +254,7 @@ if ($pluginPage) {
     }
 
     public function makeUrl($obj) {
-        $core = core::getInstance();
+        $core = Core::getInstance();
         // => Page
         if ($obj->targetIs() == 'page')
             $temp = ($core->getConfigVal('defaultPlugin') == 'page' && $obj->getIsHomepage()) ? $core->getConfigVal('siteUrl') : router::getInstance()->generate('page-read', ['name' => util::strToUrl(preg_replace ("#\<i.+\<\/i\>#i", '', $obj->getName())), 'id' => $obj->getId()]);

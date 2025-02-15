@@ -39,12 +39,12 @@
                 if (result.status === 202) {
                     Toastify({
                         text: "{{ Lang.core-changes-saved}}",
-                        className: "success"		
+                        className: "success"
                     }).showToast();
                 } else {
                     Toastify({
                         text: "{{ Lang.core-changes-not-saved}}",
-                        className: "error"		
+                        className: "error"
                     }).showToast();
                 }
         }
@@ -70,14 +70,14 @@
                     fadeOut(document.querySelector('#list-comment-' + id));
                     Toastify({
                         text: "{{ Lang.core-item-deleted}}",
-                        className: "success"		
+                        className: "success"
                     }).showToast();
                 } else {
                     Toastify({
                         text: "{{ Lang.core-item-not-deleted}}",
-                        className: "error"		
+                        className: "error"
                     }).showToast();
-                }				
+                }
             };
         }
     </script>

@@ -1,13 +1,11 @@
 <?php
 namespace Common;
 
-use Common\{Util, Template, Core, Lang};
-
 /**
  * @copyright (C) 2024, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -61,7 +59,8 @@ class Template {
     public function set($key, $value) {
         $this->data[$key] = $value;
     }
- /**
+
+    /**
      * Return the parsed template content
      *
      * @return string Parsed content
@@ -70,14 +69,13 @@ class Template {
         if (!file_exists($this->file)) {
             return "Error loading template file ($this->file).<br/>";
         }
-
         ob_start();
         $this->get_content();
         $this->addGlobalsToVars();
         $this->parse();
         // Uncomment the next line to see parsed template
-        // file_put_contents($this->file . '.cache.php', $this->content);
-eval('?>' . $this->content);
+         file_put_contents($this->file . '.cache.php', $this->content);
+        eval('use \Common; ?>' . $this->content);
         return ob_get_clean();
     }
 
@@ -128,8 +126,7 @@ eval('?>' . $this->content);
 
     protected function _no_parse($matches) {
         return str_replace('{', '#/§&µ&§;#', htmlentities($matches[1]));
-
- }
+    }
 
     protected function _show_var($name) {
         echo $this->getVar($name, $this->data);
@@ -177,10 +174,10 @@ eval('?>' . $this->content);
         $file = $this->getVar($var, $this->data);
         if (file_exists($file)) {
             if (util::getFileExtension($file) === 'tpl') {
-                $str = '$tpl = new \Common\Template(\'' . $file . '\'); echo $tpl->output();';
+                $str = '$tpl = new Template(\'' . $file . '\'); echo $tpl->output();';
                 return '<?php ' . $str . ' ?>';
             }
-            return '<?php $core = dump(\Common\Core::getInstance(); include \'' . $file . '\'); ?>';
+            return '<?php $core = \Common\Core::getInstance(); include \'' . $file . '\'; ?>';
         }
     }
 
@@ -195,12 +192,12 @@ eval('?>' . $this->content);
         }
         if ($args) {
             // Filter hook
-            return '<?php echo Core::getInstance()->callHook(\'' . $name . '\', $this->getVar(\'' . $args . '\', $this->data) ); ?>';
+            return '<?php echo \Common\Core::getInstance()->callHook(\'' . $name . '\', $this->getVar(\'' . $args . '\', $this->data) ); ?>';
         }
         // Action Hook
-        return '<?php dump(\Common\Core::getInstance()->callHook(\'' . $name . '\')); ?>';
+        return '<?php \Common\Core::getInstance()->callHook(\'' . $name . '\'); ?>';
     }
-    
+
     protected function _getLang($matches) {
         $posAcc = strpos($matches[1], '(');
         $args = '';
@@ -244,28 +241,6 @@ eval('?>' . $this->content);
      * @return mixed    Asked var
      */
     protected function getVar($var, $parent) {
-        // Gestion des appels statiques (ex: \Common\Core::getInstance())
-        if (strpos($var, '::') !== false) {
-            preg_match('#^(.*?)::(.*?)(\(.*\))?$#', $var, $matches);
-            $class = trim($matches[1]);
-            $method = trim($matches[2]);
-            $args = isset($matches[3]) ? trim($matches[3], '()') : '';
-
-            // Résolution des arguments
-            $argsArray = $args !== '' ? $this->getVar($args, $parent) : [];
-            return call_user_func_array([$class, $method], (array)$argsArray);
-        }
-
-        // Gestion des méthodes chaînées (ex: ->getConfigVal())
-        if (strpos($var, '->') !== false) {
-            $parts = explode('->', $var);
-            $object = $this->getVar(array_shift($parts), $parent);
-            foreach ($parts as $part) {
-                $object = $this->getVar($part, $object);
-            }
-            return $object;
-        }
-
         $var = trim($var);
         if ($var === "" || $var === '""') return "";
         $concats = explode('~', $var);
@@ -339,7 +314,7 @@ eval('?>' . $this->content);
                 // Unknown $name
                 return false;
             }
-                
+
             $new_parent = $this->getSubVar($name, $parent);
             // Glue resting $parts
             $var = join('.', $parts) . $args;
@@ -370,16 +345,7 @@ eval('?>' . $this->content);
         if (isset($match[1])) {
             $var = str_replace($match[0], "", $var);
             $args = true;
-            //$parts = $this->tExplode($match[1], ',');
-            // Capture les chaînes entre guillemets comme un seul argument
-        preg_match_all('#(["\'])(.*?)\1|([^,]+)#', $match[1], $matches);
-        $parts = [];
-foreach ($matches[0] as $m) {
-    $trimmed = trim($m);
-    if (!empty($trimmed)) {
-        $parts[] = $trimmed; // Conserve les guillemets
-    }
-}
+            $parts = $this->tExplode($match[1], ',');
             if (count($parts) > 1)
                 $manyArgs = true;
         } else {
@@ -390,9 +356,8 @@ foreach ($matches[0] as $m) {
         if ($manyArgs) {
             $arrArgs = [];
             foreach ($parts as $part) {
-    $trimmedPart = trim($part);
-    $arrArgs[] = $this->getVar($trimmedPart, $this->data);
-}
+                $arrArgs[] = $this->getVar(trim($part), $this->data);
+            }
             $args = $arrArgs;
         } elseif (isset($args) && $args == true) {
             $args = $this->getVar($match[1], $this->data);
@@ -410,7 +375,7 @@ foreach ($matches[0] as $m) {
                 // Method
                 if ($manyArgs) {
                     return call_user_func_array([$parent, $var], $args);
-                }                    
+                }
                 if (isset($args))
                     return call_user_func_array([$parent, $var], [$args]);
                 return $parent->$var();
@@ -450,8 +415,8 @@ foreach ($matches[0] as $m) {
 
     /**
      * Explodes a string into an array, ignoring delimiters inside parentheses () or []
-     * 
-     * @param string $str The string to explode. 
+     *
+     * @param string $str The string to explode.
      * @param string $delimiter The delimiter to split on.
      * @return array The exploded array.
      */

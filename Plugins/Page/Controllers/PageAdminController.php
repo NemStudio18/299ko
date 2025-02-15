@@ -10,12 +10,12 @@ use Plugins\Galerie\{Galerie, GalerieItem};
  * @copyright (C) 2024, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
 
-class PageAdminController extends AdminController {
+class PageAdminController extends \Common\Controllers\AdminController {
 
     public function list() {
         $page = new page();
@@ -42,7 +42,7 @@ class PageAdminController extends AdminController {
         $tpl->set('token', $this->user->token);
         $tpl->set('page', $page);
         $tpl->set('lost', $lost);
-        
+
         $response->addTemplate($tpl);
         return $response;
     }
@@ -110,7 +110,7 @@ class PageAdminController extends AdminController {
         $tpl->set('token', $this->user->token);
         $tpl->set('pageItem', $pageItem);
         $tpl->set('contentEditor', $contentEditor);
-        
+
         $response->addTemplate($tpl);
         return $response;
     }
@@ -124,7 +124,7 @@ class PageAdminController extends AdminController {
         $tpl->set('page', $page);
         $tpl->set('token', $this->user->token);
         $tpl->set('pageItem', $pageItem);
-        
+
         $response->addTemplate($tpl);
         return $response;
     }
@@ -137,7 +137,7 @@ class PageAdminController extends AdminController {
 
         $tpl->set('token', $this->user->token);
         $tpl->set('pageItem', $pageItem);
-        
+
         $response->addTemplate($tpl);
         return $response;
     }
@@ -161,7 +161,7 @@ class PageAdminController extends AdminController {
         $tpl->set('page', $page);
         $tpl->set('token', $this->user->token);
         $tpl->set('pageItem', $pageItem);
-        
+
         $response->addTemplate($tpl);
         return $response;
     }

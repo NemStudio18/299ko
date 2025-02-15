@@ -10,7 +10,7 @@ use Common\{PluginsManager, Lang};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -18,13 +18,13 @@ defined('ROOT') OR exit('Access denied!');
 ## Fonction d'installation
 
 function seoInstall() {
-    
+
 }
 
 ## Hooks
 
 function seoEndFrontHead() {
-    $plugin = pluginsManager::getInstance()->getPlugin('seo');
+    $plugin = PluginsManager::getInstance()->getPlugin('seo');
     if ($plugin->getConfigVal('trackingId') === false || $plugin->getConfigVal('trackingId') === '') {
         return;
     }

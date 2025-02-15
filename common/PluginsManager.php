@@ -1,8 +1,6 @@
 <?php
 namespace Common;
 
-use function Common\logg;
-
 /**
  * @copyright (C) 2022, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3

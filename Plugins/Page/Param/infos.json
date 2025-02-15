@@ -5,6 +5,6 @@
     "authorEmail" : "",
     "authorWebsite" : "",
     "version" : "none",
-    "homePublicMethod" : "PageController#home",
-    "homeAdminMethod" : "PageAdminController#list"
+    "homePublicMethod" : "Plugins\\Page\\Controllers\\PageController#home",
+    "homeAdminMethod" : "Plugins\\Page\\Controllers\\PageAdminController#list"
 }

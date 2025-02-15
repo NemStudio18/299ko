@@ -28,7 +28,7 @@ class PublicResponse extends Response {
 
     public function __construct() {
         parent::__construct();
-        $this->themeName = core::getInstance()->getConfigVal('theme');
+        $this->themeName = Core::getInstance()->getConfigVal('theme');
         $this->layout = new Template(THEMES . $this->themeName .'/layout.tpl');
     }
 
