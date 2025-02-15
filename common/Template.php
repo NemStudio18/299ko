@@ -75,7 +75,7 @@ class Template {
         $this->parse();
         // Uncomment the next line to see parsed template
          file_put_contents($this->file . '.cache.php', $this->content);
-        eval('use \Common; ?>' . $this->content);
+        eval('?>' . $this->content);
         return ob_get_clean();
     }
 

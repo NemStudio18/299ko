@@ -97,3 +97,4 @@ Template::addGlobal('pluginsManager', $pluginsManager);
 Template::addGlobal('CORE', $core);
 Template::addGlobal('ADMIN_PATH', ADMIN_PATH);
 Template::addGlobal('Lang', new Lang());
+Template::addGlobal('Show', new Show());
