@@ -38,7 +38,7 @@ spl_autoload_register(function ($class) use ($prefixes) {
     }
 
     // Gestion des classes sans namespace dans COMMON
-    $className = strtolower($class);
+/*     $className = strtolower($class);
     $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(COMMON));
     foreach ($iterator as $file) {
         if ($file->isFile() && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
@@ -48,7 +48,7 @@ spl_autoload_register(function ($class) use ($prefixes) {
                 return;
             }
         }
-    }
+    } */
 });
 
 use Common\Router\Router;

@@ -12,7 +12,7 @@
             <label for="isHomepage">{{ Lang.page.homepage }}</label>
         </p>
         <p>
-            <input {% if pageItem.getIsHidden() %}checked{% endif %} type="checkbox" name="isHidden" id="isHidden" /> 
+            <input {% if pageItem.getIsHidden() %}checked{% endif %} type="checkbox" name="isHidden" id="isHidden" />
             <label for="isHidden">{{ Lang.page.hide-from-menu }}</label>
         </p>
         <p>
@@ -40,7 +40,7 @@
         </p>
         {% if pageItem.getPassword() != "" %}
             <p>
-                <input type="checkbox" name="resetPassword" id="resetPassword" /> 
+                <input type="checkbox" name="resetPassword" id="resetPassword" />
                 <label for="resetPassword">{{ Lang.page.remove-password-restriction }}</label>
             </p>
         {% endif %}

@@ -31,9 +31,9 @@ class Router extends AltoRouter {
         self::$url = $url;
         parent::__construct();
         $this->setBasePath(str_replace('\\', '/', BASE_PATH));
-        $this->map('GET', '/', 'CoreController#renderHome', 'home');
-        $this->map('GET', '/index.php[/?]', 'CoreController#renderHome');
-        $this->map('GET', '/admin/', 'CoreController#renderAdminHome', 'admin');
+        $this->map('GET', '/', 'Common\Controllers\CoreController#renderHome', 'home');
+        $this->map('GET', '/index.php[/?]', 'Common\Controllers\CoreController#renderHome');
+        $this->map('GET', '/admin/', 'Common\Controllers\CoreController#renderAdminHome', 'admin');
     }
 
     public function getCleanURI() {

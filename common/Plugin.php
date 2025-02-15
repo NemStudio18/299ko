@@ -50,7 +50,7 @@ class Plugin {
     ## Constructeur
 
     public function __construct($name, $config = array(), $infos = array(), $hooks = array(), $initConfig = array()) {
-        $core = core::getInstance();
+        $core = Core::getInstance();
         // Identifiant du plugin
         $this->name = $name;
         // Tableau de configuration
@@ -110,7 +110,7 @@ class Plugin {
      * Determine Templates Files if files exist or not
      */
     protected function determineTemplatesFiles() {
-        $core = core::getInstance();
+        $core = Core::getInstance();
         // Template public (peut etre le template par defaut ou un template présent dans le dossier du theme portant le nom du plugin)
 
 

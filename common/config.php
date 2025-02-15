@@ -16,7 +16,7 @@ define("COMMON", ROOT . 'common/');
 define("DATA", ROOT . 'data/');
 define("DATA_PLUGIN", ROOT . 'data/plugin/');
 define("UPLOAD", ROOT . 'data/upload/');
-define("PLUGINS", ROOT . 'Plugins/');
+define("PLUGINS", ROOT . 'plugins/');
 define("THEMES", ROOT . 'theme/');
 define("ADMIN_PATH", ROOT . 'admin/');
 define("FONTICON", 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');

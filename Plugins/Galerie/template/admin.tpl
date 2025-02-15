@@ -40,7 +40,7 @@
             </p>
             <p>
                 <label for="category">
-                    {{ Lang.galerie.existing-categories }} : 
+                    {{ Lang.galerie.existing-categories }} :
                     {% for category in galerie.listCategories() %}
                         <a class="category" href="javascript:" title="{{ Lang.select_category(category) }}"><i class="fa-regular fa-folder-open"></i>{{ category }}</a>
                     {% endfor %}
@@ -56,7 +56,7 @@
             </p>
             <p>
                 <label for="date">{{ Lang.galerie.date }}</label><br>
-                <input type="date" name="date" id="date" value="{{ item.getDate() }}" /> 
+                <input type="date" name="date" id="date" value="{{ item.getDate() }}" />
             </p>
             <p>
                 {{ contentEditor }}
