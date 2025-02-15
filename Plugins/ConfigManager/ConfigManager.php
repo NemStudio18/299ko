@@ -15,17 +15,15 @@ use Common\{Lang, Util, Show};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
 
-require_once \Common\PLUGINS . 'ConfigManager/Lib/UpdaterManager.php';
-
 ## Fonction d'installation
 
 function configmanagerInstall() {
-    
+
 }
 
 ## Hooks
@@ -35,8 +33,8 @@ function configManagerDisplayInstallFile() {
     if (file_exists(ROOT . 'install.php')) {
         echo "<div class='msg warning'>
                 <p>". lang::get("configmanager-delete-install-msg") ."</p>
-                <div style='text-align:center'><a class='button' href='" . 
-                router::getInstance()->generate('configmanager-delete-install', ['token' => UsersManager::getCurrentUser()->token]) . 
+                <div style='text-align:center'><a class='button' href='" .
+                router::getInstance()->generate('configmanager-delete-install', ['token' => UsersManager::getCurrentUser()->token]) .
                 "'>". lang::get("configmanager-delete-install") ."</a></div>"
         . "<a href='javascript:' class='msg-button-close'><i class='fa-solid fa-xmark'></i></a></div>";
     }
@@ -65,7 +63,7 @@ function configManagerCheckNewVersion() {
                 // Actual version (testing) is higher than official release
                 $nextVersion = false;
             }
-            
+
         }
     } else {
         // No cache

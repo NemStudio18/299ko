@@ -13,16 +13,16 @@ use Common\{Core, Lang};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
 
-require_once \Common\PLUGINS . 'blog/entities/news.php';
-require_once \Common\PLUGINS . 'blog/entities/newsComment.php';
-require_once \Common\PLUGINS . 'blog/entities/newsManager.php';
-require_once \Common\PLUGINS . 'blog/entities/BlogCategoriesManager.php';
-require_once \Common\PLUGINS . 'blog/entities/BlogCategory.php';
+require_once PLUGINS . 'blog/entities/news.php';
+require_once PLUGINS . 'blog/entities/newsComment.php';
+require_once PLUGINS . 'blog/entities/newsManager.php';
+require_once PLUGINS . 'blog/entities/BlogCategoriesManager.php';
+require_once PLUGINS . 'blog/entities/BlogCategory.php';
 
 
 

@@ -1,5 +1,4 @@
 <?php
-namespace Common;
 
 /**
  * @copyright (C) 2022, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
@@ -8,25 +7,24 @@ namespace Common;
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
- 
 
- const VERSION = '2.0.0';
- const COMMON = ROOT . 'Common/';
- const DATA = ROOT . 'data/';
- const UPLOAD = ROOT . 'data/upload/';
- const DATA_PLUGIN = ROOT . 'data/plugin/';
- const THEMES = ROOT . 'theme/';
- const PLUGINS = ROOT . 'Plugins/';
- const ADMIN_PATH = ROOT . 'admin/';
- const FONTICON = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
- const FANCYCSS = 'https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.min.css';
- const FANCYJS = 'https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.umd.min.js';
- const CAT_TPL = 'Common/Categories/template/';
+define("VERSION" ,'2.0.0');
+define("COMMON", ROOT . 'common/');
+define("DATA", ROOT . 'data/');
+define("DATA_PLUGIN", ROOT . 'data/plugin/');
+define("UPLOAD", ROOT . 'data/upload/');
+define("PLUGINS", ROOT . 'Plugins/');
+define("THEMES", ROOT . 'theme/');
+define("ADMIN_PATH", ROOT . 'admin/');
+define("FONTICON", 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+define("FANCYCSS", 'https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.min.css');
+define("FANCYJS", 'https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.umd.min.js');
+define("CAT_TPL", 'Common/Categories/template/');
 
- $filename = DATA . 'key.php';
- if (file_exists($filename)) {
-     include $filename;
- }
+$filename = DATA . 'key.php';
+if (file_exists($filename)) {
+    include $filename;
+}

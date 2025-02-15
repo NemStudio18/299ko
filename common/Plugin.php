@@ -1,8 +1,6 @@
 <?php
 namespace Common;
 
-use Common\{Core, Util, Lang};
-
 /**
  * @copyright (C) 2024, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
@@ -10,7 +8,7 @@ use Common\{Core, Util, Lang};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -72,16 +70,16 @@ class Plugin {
         // Titre de page
         $this->setMainTitle($infos['name']);
         // Fichier php principal
-        $this->libFile = (file_exists(\Common\PLUGINS . $this->name . '/' . $this->name . '.php')) ? PLUGINS . $this->name . '/' . $this->name . '.php' : false;
+        $this->libFile = (file_exists(PLUGINS . $this->name . '/' . $this->name . '.php')) ? PLUGINS . $this->name . '/' . $this->name . '.php' : false;
 
         $this->setCallables();
-        
+
         // CSS
-        $this->publicCssFile = (file_exists(\Common\PLUGINS . $this->name . '/template/public.css')) ? PLUGINS . $this->name . '/template/public.css' : false;
-        $this->adminCssFile = (file_exists(\Common\PLUGINS . $this->name . '/template/admin.css')) ? util::urlBuild(\Common\PLUGINS . $this->name . '/template/admin.css') : false;
+        $this->publicCssFile = (file_exists(PLUGINS . $this->name . '/template/public.css')) ? PLUGINS . $this->name . '/template/public.css' : false;
+        $this->adminCssFile = (file_exists(PLUGINS . $this->name . '/template/admin.css')) ? util::urlBuild(PLUGINS . $this->name . '/template/admin.css') : false;
         // JS
-        $this->publicJsFile = (file_exists(\Common\PLUGINS . $this->name . '/template/public.js')) ? PLUGINS . $this->name . '/template/public.js' : false;
-        $this->adminJsFile = (file_exists(\Common\PLUGINS . $this->name . '/template/admin.js')) ? util::urlBuild(\Common\PLUGINS . $this->name . '/template/admin.js') : false;
+        $this->publicJsFile = (file_exists(PLUGINS . $this->name . '/template/public.js')) ? PLUGINS . $this->name . '/template/public.js' : false;
+        $this->adminJsFile = (file_exists(PLUGINS . $this->name . '/template/admin.js')) ? util::urlBuild(PLUGINS . $this->name . '/template/admin.js') : false;
         // Répertoir de sauvegarde des données internes du plugin
         $this->dataPath = (is_dir(DATA_PLUGIN . $this->name)) ? DATA_PLUGIN . $this->name . '/' : false;
         // Configuration d'usine
@@ -114,16 +112,16 @@ class Plugin {
     protected function determineTemplatesFiles() {
         $core = core::getInstance();
         // Template public (peut etre le template par defaut ou un template présent dans le dossier du theme portant le nom du plugin)
-       
+
 
         // Template parametres
-        if (file_exists(\Common\PLUGINS . $this->name . '/template/param.tpl'))
+        if (file_exists(PLUGINS . $this->name . '/template/param.tpl'))
             $this->paramTemplate = PLUGINS . $this->name . '/template/param.tpl';
         else
             $this->paramTemplate = false;
 
         // Template d'aide
-        if (file_exists(\Common\PLUGINS . $this->name . '/template/help.tpl'))
+        if (file_exists(PLUGINS . $this->name . '/template/help.tpl'))
             $this->helpTemplate = PLUGINS . $this->name . '/template/help.tpl';
         else
             $this->helpTemplate = false;
@@ -192,7 +190,7 @@ class Plugin {
     public function getAdminFile() {
         return $this->adminFile;
     }
-    
+
     public function getPublicCssFile() {
         return $this->publicCssFile;
     }
@@ -302,19 +300,19 @@ class Plugin {
             return true;
         return false;
     }
-    
+
     public function loadLangFile() {
-        lang::loadLanguageFile(\Common\PLUGINS . $this->name . '/langs/');
+        lang::loadLanguageFile(PLUGINS . $this->name . '/langs/');
     }
-    
+
     public function loadRoutes() {
-        if (is_file(\Common\PLUGINS . $this->name . '/param/routes.php')) {
-            require_once \Common\PLUGINS . $this->name . '/param/routes.php';
+        if (is_file(PLUGINS . $this->name . '/param/routes.php')) {
+            require_once PLUGINS . $this->name . '/param/routes.php';
         }
     }
-    
+
     public function loadControllers() {
-        foreach (glob(\Common\PLUGINS . $this->name . '/controllers/' . "*.php") as $file) {
+        foreach (glob(PLUGINS . $this->name . '/controllers/' . "*.php") as $file) {
             include_once $file;
         }
     }

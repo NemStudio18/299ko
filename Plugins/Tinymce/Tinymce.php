@@ -13,7 +13,7 @@ use Common\{Util, Lang, Core};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
@@ -21,14 +21,14 @@ defined('ROOT') OR exit('Access denied!');
 ## Fonction d'installation
 
 function tinymceInstall() {
-    
+
 }
 
 ## Hooks
 
 function tinymceAdminHead() {
     $uploadUrl = router::getInstance()->generate('filemanager-upload-api', ['token' => UsersManager::getCurrentUser()->token]);
-    $url = util::urlBuild(\Common\PLUGINS . 'tinymce/lib/tinymce/tinymce.min.js');
+    $url = util::urlBuild(PLUGINS . 'tinymce/lib/tinymce/tinymce.min.js');
     $options = "language: '". lang::getLocale(). "',
         images_upload_url: '" . $uploadUrl . "',
         automatic_uploads: true,
@@ -41,7 +41,7 @@ function tinymceAdminHead() {
         max_height: 600,
         image_caption: true,
         content_css: [
-			'" . util::urlBuild(\Common\PLUGINS . 'tinymce/template/editor.css') . "',
+			'" . util::urlBuild(PLUGINS . 'tinymce/template/editor.css') . "',
             '" . \Common\FONTICON . "',
 		],
         setup: (editor) => {
@@ -55,7 +55,7 @@ function tinymceAdminHead() {
             { name: 'success', title: '".addslashes(lang::get('warning.success')). "', block: 'div', classes: [ 'success' ]},
             { name: 'warning', title: '".addslashes(lang::get('warning.warning')). "', block: 'div', classes: [ 'warning' ]},
             { name: 'error', title: '".addslashes(lang::get('warning.error')). "', block: 'div', classes: [ 'error' ]},
-            { name: 'info', title: '". addslashes(lang::get('warning.info')). "', block: 'div', classes: [ 'info' ]} 
+            { name: 'info', title: '". addslashes(lang::get('warning.info')). "', block: 'div', classes: [ 'info' ]}
         ],
         style_formats_merge: true,
 		codesample_languages: [
@@ -105,7 +105,7 @@ const dialogIcon =  {
       const data = api.getData();
       let insertText = data.iconCode.replace('<i class=', '<span class=');
     insertText = insertText.replace('></i>', '>&nbsp;</span> ');
-  
+
       tinymce.activeEditor.execCommand('InsertHTML', false, insertText);
       api.close();
     }
@@ -148,7 +148,7 @@ function tinymceInsertScriptBeforeEditor() {
         var range = ed.selection.getRng();
         var newNode = ed.getDoc().createElement ( "img" );
         newNode.src=imgUrl;
-        range.insertNode(newNode);  
+        range.insertNode(newNode);
     }
     </script>';
 }

@@ -8,21 +8,21 @@ use Plugins\FileManager\Lib\{Folder, File};
  * @copyright (C) 2024, 299Ko
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
  * @author Maxence Cauderlier <mx.koder@gmail.com>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('Access denied!');
 
-require_once(\Common\PLUGINS . 'filemanager/lib/File.php');
-require_once(\Common\PLUGINS . 'filemanager/lib/Folder.php');
+require_once(PLUGINS . 'filemanager/lib/File.php');
+require_once(PLUGINS . 'filemanager/lib/Folder.php');
 
 class FileManager {
-    
+
     /**
      * @var string Current directory
      */
     protected string $directory = '';
-    
+
     /**
      * @var array Children directories
      */
@@ -32,7 +32,7 @@ class FileManager {
      * @var array Children files
      */
     protected array $subFiles = [];
-    
+
     public function __construct($directory) {
         $this->directory = trim($directory, '/') . '/';
         if (!is_dir($this->directory)) {
@@ -40,7 +40,7 @@ class FileManager {
         }
         $this->hydrateChildren();
     }
-    
+
     protected function hydrateChildren() {
         $fileList = glob($this->directory . "*");
         for ($v = 0; $v < sizeof($fileList); $v++) {
@@ -52,15 +52,15 @@ class FileManager {
             }
         }
     }
-    
+
     public function getFolders() {
         return $this->subDir;
     }
-    
+
     public function getFiles() {
         return $this->subFiles;
     }
-    
+
     public function uploadFile($arrayName) {
         $file = $_FILES[$arrayName];
         $fileName = util::strToUrl(pathinfo($file['name'], PATHINFO_FILENAME));
@@ -72,7 +72,7 @@ class FileManager {
             return false;
         }
     }
-    
+
     public function deleteFile($filename) {
         if (isset($this->subFiles[$filename])) {
             $error = $this->subFiles[$filename]->delete();
@@ -83,7 +83,7 @@ class FileManager {
         }
         return false;
     }
-    
+
     public function deleteFolder($foldername) {
         if (isset($this->subDir[$foldername])) {
             $error = $this->subDir[$foldername]->delete();
@@ -94,7 +94,7 @@ class FileManager {
         }
         return false;
     }
-    
+
     public function deleteAllFiles() {
         $error = false;
         foreach ($this->subFiles as $file) {
@@ -104,7 +104,7 @@ class FileManager {
         }
         return $error;
     }
-    
+
     public function deleteAllFolders() {
         $error = false;
         foreach ($this->subDir as $folder) {
@@ -114,7 +114,7 @@ class FileManager {
         }
         return $error;
     }
-    
+
     public function createFolder($name) {
         return mkdir($this->directory . $name, 0755);
     }

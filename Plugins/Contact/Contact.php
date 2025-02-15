@@ -11,7 +11,7 @@ use Common\{Util, Lang, Core};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') OR exit('No pagesFileect script access allowed');
@@ -21,7 +21,7 @@ defined('ROOT') OR exit('No pagesFileect script access allowed');
 function contactInstall() {
     util::writeJsonFile(DATA_PLUGIN . 'contact/emails.json', []);
     $data = util::readJsonFile(DATA_PLUGIN . 'contact/config.json');
-    lang::loadLanguageFile(\Common\PLUGINS . 'contact/langs/');
+    lang::loadLanguageFile(PLUGINS . 'contact/langs/');
     $data['acceptation'] = lang::get('contact.default-acceptation');
     util::writeJsonFile(DATA_PLUGIN . 'contact/config.json', $data);
 }

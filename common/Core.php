@@ -3,8 +3,6 @@ namespace Common;
 
 use Common\Router\Router;
 use Common\Responses\PublicResponse;
-use Common\{Util, Lang, Core};
-use function Common\{logg, debug};
 
 /**
  * @copyright (C) 2024, 299Ko, based on code (2010-2021) 99ko https://github.com/99kocms/
@@ -13,7 +11,7 @@ use function Common\{logg, debug};
  * @author Maxence Cauderlier <mx.koder@gmail.com>
  * @author Frédéric Kaplon <frederic.kaplon@me.com>
  * @author Florent Fortat <florent.fortat@maxgun.fr>
- * 
+ *
  * @package 299Ko https://github.com/299Ko/299ko
  */
 defined('ROOT') or exit('Access denied!');
@@ -106,8 +104,8 @@ class Core
                 }
             }
         }
-        lang::setLocale($this->locale);
-        lang::loadLanguageFile(COMMON . 'langs/');
+        Lang::setLocale($this->locale);
+        Lang::loadLanguageFile(COMMON . 'langs/');
         $this->css[] = FONTICON;
         $this->css[] = FANCYCSS;
         $this->js[] = FANCYJS;
@@ -115,7 +113,7 @@ class Core
 
     /**
      * Return Core Instance
-     * 
+     *
      * @return \self
      */
     public static function getInstance()
@@ -159,7 +157,7 @@ class Core
     /**
      * Set up a config val.
      * This setting will not be saved
-     * 
+     *
      * @param string $key
      * @param string $value
      */
@@ -248,7 +246,7 @@ class Core
      * Permet d'appeler un hook
      * Si un paramètre est fourni, celui-ci sera passé de fonction en fonction Hook de filtre).
      * Sinon, la valeur de retour sera concaténé à chaque fonction (Hook d'action).
-     * 
+     *
      * @param   string  Nom du hook
      * @param   mixed   Paramètres
      * @return  mixed
@@ -300,7 +298,7 @@ class Core
 
     /**
      * Redirect to an other URL and stop current connection
-     * 
+     *
      * @param string $url
      */
     public function redirect(string $url): void
@@ -328,7 +326,7 @@ class Core
     /**
      * Saves a configuration value to the config file.
      *
-     * @param string|array $val The configuration value to save. 
+     * @param string|array $val The configuration value to save.
      * @param array $append Additional configuration values to append.
      * @return bool True if the save was successful, false otherwise.
      */
@@ -430,7 +428,7 @@ class Core
 
     /**
      * Add a log into log file
-     * 
+     *
      * @param string|array Message
      * @param string Severity
      * Can be 'INFO', 'DEBUG', 'WARNING', 'ERROR'
@@ -459,7 +457,7 @@ class Core
 /**
  * Add a log into log file
  * @see \core->log()
- * 
+ *
  * @param string|array Message
  * @param string Severity
  * Can be 'INFO', 'DEBUG', 'WARNING', 'ERROR'
