@@ -1,7 +1,7 @@
 <section>
     <header>{{ Lang.contact.content }}</header>
     <form method="post" action="{{ ROUTER.generate("contact-saveConfig") }}">
-        {{ show.tokenField() }}
+        {{ Common\Show.tokenField() }}
         <p>
             <label for="content1">{{ Lang.contact.before_form }}</label>
             <textarea class="editor" name="content1" id="content1">{% HOOK.beforeEditEditor( runPlugin.getConfigVal("content1")) %}</textarea><br>
@@ -22,5 +22,5 @@
         <textarea readonly="readonly" id="savedMails">{{ emails }}</textarea>
     </p>
     <a href="{{ ROUTER.generate("contact-empty-mails", ["token" => token]) }}" class="button alert"
-       onclick="return(confirm('{{ Lang.contact.confirm_empty_mail_base }}'));">{{ Lang.contact.delete_base }}</a> 
+       onclick="return(confirm('{{ Lang.contact.confirm_empty_mail_base }}'));">{{ Lang.contact.delete_base }}</a>
 </section>

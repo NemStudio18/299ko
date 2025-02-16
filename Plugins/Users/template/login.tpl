@@ -6,16 +6,16 @@
 		<meta name="robots" content="noindex"><meta name="googlebot" content="noindex">
 		<title>299ko - {{ Lang.core-connection }}</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
-		<meta name="description" content="{{ SHOW.metaDescriptionTag }}"/>
-		<link rel="icon" href="{{ SHOW.themeIcon }}"/>
-		{{ SHOW.linkTags }}
-		{{ SHOW.scriptTags }}
-		{{ SHOW.showMetas }}
+		<meta name="description" content="{{ Common\Show.metaDescriptionTag }}"/>
+		<link rel="icon" href="{{ Common\Show.themeIcon }}"/>
+		{{ Common\Show.linkTags }}
+		{{ Common\Show.scriptTags }}
+		{{ Common\Show.showMetas }}
 		{% HOOK.endFrontHead %}
 	</head>
 	<body class="login">
 		<div id="alert-msg">
-			{{ SHOW.displayMsg }}
+			{{ Common\Show.displayMsg }}
 		</div>
 		<div id="login" class="card">
 			<header>
