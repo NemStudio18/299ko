@@ -1,5 +1,5 @@
 <form method="post" action="{{ ROUTER.generate("seo-admin-save")}}">
-    {{ show.tokenField() }}
+    {{ Common\Show.tokenField() }}
     <section>
         <header>{{ Lang.seo.display }}</header>
         <p>

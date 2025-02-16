@@ -1,5 +1,5 @@
 <form method="post" action="{{ ROUTER.generate("admin-galerie-save-config")}}">
-    {{ SHOW.tokenField()}}
+    {{ Common\Show.tokenField()}}
 
     <p>
         <input {% if runPlugin.getConfigVal("showTitles") %} checked {% endif %} type="checkbox" name="showTitles" id="showTitles" />

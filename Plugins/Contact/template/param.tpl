@@ -1,5 +1,5 @@
 <form method="post" action="{{ ROUTER.generate("contact-saveParams")}}">
-    {{ show.tokenField() }}
+    {{ Common\Show.tokenField() }}
     <p>
         <label for="copy">{{ Lang.contact.copy_recipient }}</label><br>
         <input type="email" name="copy" id="copy" value="{{ runPlugin.getConfigVal("copy") }}" />

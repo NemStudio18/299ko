@@ -74,7 +74,7 @@ class Template {
         $this->addGlobalsToVars();
         $this->parse();
         // Uncomment the next line to see parsed template
-         file_put_contents($this->file . '.cache.php', $this->content);
+        // file_put_contents($this->file . '.cache.php', $this->content);
         eval('?>' . $this->content);
         return ob_get_clean();
     }

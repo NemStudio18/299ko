@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="{{ Lang.getLocale}}">
+<html lang="{{ Common\Lang.getLocale}}">
 	<head>
 		{% HOOK.frontHead %}
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>{{ Show.titleTag }}</title>
+		<title>{{ Common\Show.titleTag }}</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
-		<meta name="description" content="{{ Show.metaDescriptionTag }}"/>
-		<link rel="icon" href="{{ Show.themeIcon }}"/>
-		<base href="{{ Show.siteUrl }}/">
-		{{ Show.linkTags }}
-		{{ Show.scriptTags }}
-		{{ Show.showMetas }}
+		<meta name="description" content="{{ Common\Show.metaDescriptionTag }}"/>
+		<link rel="icon" href="{{ Common\Show.themeIcon }}"/>
+		<base href="{{ Common\Show.siteUrl }}/">
+		{{ Common\Show.linkTags }}
+		{{ Common\Show.scriptTags }}
+		{{ Common\Show.showMetas }}
 		{% HOOK.endFrontHead %}
 	</head>
 	<body>
@@ -19,33 +19,33 @@
 				<nav id="header_content">
 					<button id="mobile_menu" aria-label="{{ Lang.site-menu-label }}"></button>
 					<p id="siteName">
-						<a href="{{ Show.siteUrl }}">{{ Show.siteName }}</a>
+						<a href="{{ Common\Show.siteUrl }}">{{ Common\Show.siteName }}</a>
 					</p>
 					<ul id="navigation">
-						{{ Show.mainNavigation }}
+						{{ Common\Show.mainNavigation }}
 						{% HOOK.endMainNavigation %}
 					</ul>
 				</nav>
 			</div>
 			<div id="alert-msg">
-				{{ Show.displayMsg }}
+				{{ Common\Show.displayMsg }}
 			</div>
 			<div id="banner">
 				<div id="siteDesc">
-					{{ Show.siteDesc}}
+					{{ Common\Show.siteDesc}}
 				</div>
 			</div>
 			<main id="body">
 				{% IF CORE.getConfigVal(hideTitles) == 0 %}
 					<div id="pageTitle">
-						{{ Show.mainTitle }}
+						{{ Common\Show.mainTitle }}
 					</div>
 				{% ENDIF %}
 				<div id="body-page">
-					<div id="content" class="{{ Show.pluginId }}">
+					<div id="content" class="{{ Common\Show.pluginId }}">
 						{{ CONTENT }}
 					</div>
-					{{ show.displayPublicSidebar() }}
+					{{ Common\Show.displayPublicSidebar() }}
 				</div>
 			</main>
 			<div id="footer">
@@ -55,7 +55,7 @@
 						<a target='_blank' href='https://299ko.ovh'>{{ Lang.site-just-using( ) }}</a>
 						-
 						{{ Lang.site-theme }}
-						{{ Show.theme }}
+						{{ Common\Show.theme }}
 						-
 						{% if IS_LOGGED %}
 							<a rel="nofollow" href="{{ ROUTER.generate("logout") }}">{{ Lang.core-disconnection }}</a>
