@@ -265,6 +265,7 @@ class util
      */
     public static function urlBuild($uri, $admin = false)
     {
+        $uri = str_replace('\\', '/', $uri);
         if (isset(parse_url($uri)['host'])) {
             // Absolute URL
             return $uri;

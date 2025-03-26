@@ -66,6 +66,7 @@ class show {
             call_user_func('linkTags');
         else {
             $core = core::getInstance();
+            $theme = new Theme($core->getConfigVal('theme'));
             $pluginsManager = pluginsManager::getInstance();
             foreach ($core->getCss() as $k => $v) {
                 echo '<link href="' . util::urlBuild($v) . '" rel="stylesheet" type="text/css" />';
@@ -78,7 +79,7 @@ class show {
                         echo '<link href="' . $plugin->getAdminCssFile() . '" rel="stylesheet" type="text/css" />';
                 }
             if (!ADMIN_MODE)
-                echo '<link href="' . $core->getConfigVal('siteUrl') . '/' . 'theme/' . $core->getConfigVal('theme') . '/styles.css" rel="stylesheet" type="text/css" />';
+                echo $theme->getCSSLinks();
         }
     }
 
@@ -89,6 +90,7 @@ class show {
             call_user_func('scriptTags');
         else {
             $core = core::getInstance();
+            $theme = new Theme($core->getConfigVal('theme'));
             $pluginsManager = pluginsManager::getInstance();
             foreach ($core->getJs() as $k => $v) {
                 echo '<script type="text/javascript" src="' . util::urlBuild($v) . '"></script>';
@@ -101,7 +103,7 @@ class show {
                         echo '<script type="text/javascript" src="' . $plugin->getAdminJsFile() . '"></script>';
                 }
             if (!ADMIN_MODE)
-                echo '<script type="text/javascript" src="' . $core->getConfigVal('siteUrl') . '/' . 'theme/' . $core->getConfigVal('theme') . '/scripts.js' . '"></script>';
+                echo $theme->getJSLinks();
         }
     }
     

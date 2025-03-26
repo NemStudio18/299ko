@@ -12,10 +12,10 @@ defined('ROOT') OR exit('Access denied!');
 class PublicResponse extends Response {
 
     /**
-     * Current theme name
-     * @var string
+     * Current theme
+     * @var Theme
      */
-    protected string $themeName;
+    protected Theme $theme;
 
     /**
      * Layout
@@ -27,20 +27,20 @@ class PublicResponse extends Response {
 
     public function __construct() {
         parent::__construct();
-        $this->themeName = core::getInstance()->getConfigVal('theme');
-        $this->layout = new Template(THEMES . $this->themeName .'/layout.tpl');
+        $this->theme = new Theme(core::getInstance()->getConfigVal('theme'));
+        $this->layout = new Template($this->theme->getLayout());
     }
 
     /**
      * Create a new Template, from plugin
-     * Eg : if plugin is 'blog' & asked template is 'read', look for 'THEMES/theme/blog.read.tpl'
+     * Eg : if plugin is 'blog' & asked template is 'read', look for 'THEMES/theme/template/blog.read.tpl'
      * else create tpl with PLUGINS/blog/template/read.tpl
      * @param string $pluginName
      * @param string $templateName
      * @return Template
      */
     public function createPluginTemplate(string $pluginName, string $templateName):Template {
-        $themeFile = THEMES . $this->themeName . '/' . $pluginName . '.' . $templateName . '.tpl';
+        $themeFile = $this->theme->getPluginTemplatePath($pluginName, $templateName);
         if (file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
@@ -49,12 +49,19 @@ class PublicResponse extends Response {
         return $tpl;
     }
 
+    /**
+     * Create a new Template, from core
+     * Eg : if asked template is '404', look for 'THEMES/theme/template/core.404.tpl'
+     * If the template exist in the current theme, use it, else use the one from common/template
+     * @param string $templateName
+     * @return Template
+     */
     public function createCoreTemplate(string $templateName):Template {
-        $themeFile = THEMES . $this->themeName . '/' . $templateName . '.tpl';
+        $themeFile = $this->theme->getCoreTemplatePath($templateName);
         if (file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
-            $tpl = new Template(COMMON . 'templates/' . $templateName . '.tpl');
+            $tpl = new Template(COMMON . 'template/' . $templateName . '.tpl');
         }
         return $tpl;
     }

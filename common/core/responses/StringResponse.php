@@ -13,13 +13,13 @@ class StringResponse extends Response {
 
     /**
      * Current theme name
-     * @var string
+     * @var Theme
      */
-    protected string $themeName;
+    protected Theme $theme;
 
     public function __construct() {
         parent::__construct();
-        $this->themeName = core::getInstance()->getConfigVal('theme');
+        $this->theme = new Theme(core::getInstance()->getConfigVal('theme'));
     }
 
     /**
@@ -37,14 +37,14 @@ class StringResponse extends Response {
 
     /**
      * Create a new Template, from plugin
-     * Eg : if plugin is 'blog' & asked template is 'read', look for 'THEMES/theme/blog.read.tpl'
+     * Eg : if plugin is 'blog' & asked template is 'read', look for 'THEMES/theme/template/blog.read.tpl'
      * else create tpl with PLUGINS/blog/template/read.tpl
      * @param string $pluginName
      * @param string $templateName
      * @return Template
      */
     public function createPluginTemplate(string $pluginName, string $templateName):Template {
-        $themeFile = THEMES . $this->themeName . '/' . $pluginName . '.' . $templateName . '.tpl';
+        $themeFile = $this->theme->getPluginTemplatePath($pluginName, $templateName);
         if (file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
