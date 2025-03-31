@@ -41,7 +41,7 @@ class PublicResponse extends Response {
      */
     public function createPluginTemplate(string $pluginName, string $templateName):Template {
         $themeFile = $this->theme->getPluginTemplatePath($pluginName, $templateName);
-        if (file_exists($themeFile)) {
+        if ($themeFile !== null && file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
             $tpl = new Template(PLUGINS . $pluginName .'/template/' . $templateName . '.tpl');
