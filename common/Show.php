@@ -66,7 +66,6 @@ class show {
             call_user_func('linkTags');
         else {
             $core = core::getInstance();
-            $theme = new Theme($core->getConfigVal('theme'));
             $pluginsManager = pluginsManager::getInstance();
             foreach ($core->getCss() as $k => $v) {
                 echo '<link href="' . util::urlBuild($v) . '" rel="stylesheet" type="text/css" />';
@@ -79,7 +78,7 @@ class show {
                         echo '<link href="' . $plugin->getAdminCssFile() . '" rel="stylesheet" type="text/css" />';
                 }
             if (!ADMIN_MODE)
-                echo $theme->getCSSLinks();
+                echo '<link href="' . $core->getConfigVal('siteUrl') . '/' . 'theme/' . $core->getConfigVal('theme') . '/styles.css" rel="stylesheet" type="text/css" />';
         }
     }
 
@@ -90,7 +89,6 @@ class show {
             call_user_func('scriptTags');
         else {
             $core = core::getInstance();
-            $theme = new Theme($core->getConfigVal('theme'));
             $pluginsManager = pluginsManager::getInstance();
             foreach ($core->getJs() as $k => $v) {
                 echo '<script type="text/javascript" src="' . util::urlBuild($v) . '"></script>';
@@ -103,7 +101,7 @@ class show {
                         echo '<script type="text/javascript" src="' . $plugin->getAdminJsFile() . '"></script>';
                 }
             if (!ADMIN_MODE)
-                echo $theme->getJSLinks();
+                echo '<script type="text/javascript" src="' . $core->getConfigVal('siteUrl') . '/' . 'theme/' . $core->getConfigVal('theme') . '/scripts.js' . '"></script>';
         }
     }
     
@@ -333,7 +331,7 @@ class show {
             call_user_func('currentUrl');
         else {
             $core = core::getInstance();
-            echo $core->getConfigVal('siteUrl'). $_SERVER['REQUEST_URI'];
+            echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         }
     }
 
@@ -343,8 +341,9 @@ class show {
         if (function_exists('themeIcon'))
             call_user_func('themeIcon');
         $core = core::getInstance();
-        $theme = new Theme($core->getConfigVal('theme'));
-        echo $theme->getIconUrl();
+        $icon = 'theme/' . $core->getConfigVal('theme') . '/icon.png';
+        if (file_exists($icon))
+            echo util::urlBuild($icon);
     }
     
     /**

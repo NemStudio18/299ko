@@ -1,0 +1,269 @@
+/* -------------------------------------------------------------
+   CONTAINER POUR ITEMS (PLUGINS & THÈMES)
+------------------------------------------------------------- */
+/* Conteneur général pour chaque plugin ou thème */
+
+.market-item {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+}
+
+.market-item>header+div {
+  flex-grow: 2;
+}
+
+.market-item>header h2 {
+  margin-bottom: 0;
+  font-size: 24px;
+}
+
+.market-item>footer {
+  text-align: center;
+}
+
+.item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Titre des items */
+.item h2 {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+/* Bloc d'information pour chaque détail */
+.item .info {
+  margin-bottom: 8px;
+  font-size: 0.95em;
+}
+
+/* Accentuer le texte des labels dans les infos */
+.item .info strong {
+  color: #555;
+}
+
+/* Conteneur pour les actions (boutons/icônes) */
+.item .actions {
+  margin-top: 15px;
+  text-align: right;
+}
+
+/* -------------------------------------------------------------
+   BOUTONS & ICÔNES D'ACTION
+------------------------------------------------------------- */
+/* Style pour le bouton d'installation/mise à jour */
+.download-btn {
+  display: inline-block;
+  background-color: #0073aa;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  font-size: 0.95em;
+}
+
+/* Effet survol pour le bouton */
+.download-btn:hover {
+  background-color: #005880;
+}
+
+/* Icône indiquant une mise à jour disponible (en rouge) */
+.update-icon {
+  color: #d9534f;
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* Icône indiquant que le plugin/thème est à jour (en vert) */
+.up-to-date-icon {
+  color: #5cb85c;
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* -------------------------------------------------------------
+   SECTIONS DE LA PAGE D'ACCUEIL
+------------------------------------------------------------- */
+/* Conteneur pour les sections (plugins et thèmes en vedette) */
+.section {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Titre des sections */
+.section h2 {
+  margin-bottom: 10px;
+  font-size: 1.3em;
+}
+
+/* Liste des éléments en vedette */
+.featured-list {
+  list-style: none;
+  margin-bottom: 15px;
+}
+
+/* Style pour chaque élément de la liste en vedette */
+.featured-list li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------------------
+   LIENS GÉNÉRAUX
+------------------------------------------------------------- */
+/* Style pour les liens génériques */
+.link {
+  color: #0073aa;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+/* Effet survol pour les liens génériques */
+.link:hover {
+  text-decoration: underline;
+  color: #005880;
+}
+
+/* -------------------------------------------------------------
+   RÉACTIVITÉ
+------------------------------------------------------------- */
+/* Ajustements pour les petits écrans */
+@media (max-width: 768px) {
+  .navigation-market ul {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .item,
+  .section {
+    padding: 10px;
+  }
+}
+
+/* Surcouche pour la liste de plugins */
+.market-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+/* Style de base pour chaque tuile de plugin */
+.plugin-list .item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Effet de survol pour chaque tuile */
+.plugin-list .item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Style du titre dans chaque tuile */
+.plugin-list .item h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+/* Style des informations complémentaires */
+.plugin-list .item .info {
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+/* Section des actions (boutons, liens, etc.) */
+.plugin-list .item .actions {
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Style pour le bouton d'installation */
+.plugin-list .item .download-btn {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.plugin-list .item .download-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Navigation de la marketplace */
+.navigation-market ul {
+  list-style: none;
+  padding: 0;
+  ;
+  display: flex;
+  gap: 15px;
+}
+
+.navigation-market a {
+  text-decoration: none;
+  color: #007BFF;
+  transition: color 0.2s ease;
+}
+
+.navigation-market a:hover {
+  color: #0056b3;
+}
+
+.home-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.home-list h2 {
+  text-align: center;
+}
+
+/* Styles pour la note */
+.note {
+  background-color: #e7f3fe;
+  /* fond bleu très clair */
+  border-left: 4px solid #0073aa;
+  /* bordure bleue sur la gauche */
+  padding: 0 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  color: #333;
+  font-size: 0.75em;
+}
+
+.note p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 600px) {
+  .home-list {
+    grid-template-columns: 1fr;
+  }
+}

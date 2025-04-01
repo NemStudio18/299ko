@@ -19,7 +19,7 @@ switch ($catDisplay) {
         }
         ?>
         <select name="<?php echo $fieldName; ?>" id="<?php echo $fieldName; ?>">
-            <option value="0"><?php echo lang::get('blog.categories.none'); ?></option>
+            <option value="0">{{ Lang.blog.categories.none }}</option>
         
         <?php
         foreach ($this->imbricatedCategories as $cat) {

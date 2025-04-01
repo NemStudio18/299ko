@@ -24,7 +24,6 @@ function tinymceAdminHead() {
     $uploadUrl = router::getInstance()->generate('filemanager-upload-api', ['token' => UsersManager::getCurrentUser()->token]);
     $url = util::urlBuild(PLUGINS . 'tinymce/lib/tinymce/tinymce.min.js');
     $options = "language: '". lang::getLocale(). "',
-        toolbar_mode: 'wrap',
         images_upload_url: '" . $uploadUrl . "',
         automatic_uploads: true,
         convert_urls: false,

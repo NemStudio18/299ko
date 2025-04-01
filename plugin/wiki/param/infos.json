@@ -1,0 +1,9 @@
+{
+    "name": "Wiki",
+    "icon": "fa-solid fa-book",
+    "description": "Plugin Wiki pour créer et gérer des pages collaboratives",
+    "authorEmail": "nemstudio18@gmail.com",
+    "authorWebsite": "https://flexcb.fr",
+    "version": "0.1",
+    "homeAdminMethod": "AdminWikiController#index"
+}

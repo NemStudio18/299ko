@@ -48,7 +48,7 @@ class plugin {
 
     ## Constructeur
 
-    public function __construct($name, $config = [], $infos = [], $hooks = [], $initConfig = []) {
+    public function __construct($name, $config = array(), $infos = array(), $hooks = array(), $initConfig = array()) {
         $core = core::getInstance();
         // Identifiant du plugin
         $this->name = $name;
@@ -84,7 +84,7 @@ class plugin {
         // Configuration d'usine
         $this->initConfig = $initConfig;
         // Navigation
-        $this->navigation = [];
+        $this->navigation = array();
         // URL public
         $this->publicUrl = $core->getConfigVal('siteUrl') . '/' . $this->name . '/';
         $this->determineTemplatesFiles();
@@ -129,7 +129,7 @@ class plugin {
     ## Getters
 
     public function getConfigVal($val) {
-        return $this->config[$val] ?? false;
+        return isset($this->config[$val]) ? $this->config[$val] : false;
     }
 
     public function getConfig() {
@@ -275,7 +275,7 @@ class plugin {
     ## Initialise la navigation
 
     public function initNavigation() {
-        $this->navigation = [];
+        $this->navigation = array();
     }
 
     ## Détermine si le plugin est installé
