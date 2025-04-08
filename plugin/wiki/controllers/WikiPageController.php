@@ -22,6 +22,9 @@ class WikiPageController {
         // Construction du menu de navigation
         $navMenu = $this->buildNavigationMenu();
 
+        // Définir une URL de base toujours terminée par un slash
+        $baseUrl = rtrim($router->generate('wiki-view'), '/') . '/';
+
         if ($pageId) {
             $page = $this->pageManager->getPage($pageId);
             if (!$page) {
@@ -30,7 +33,7 @@ class WikiPageController {
             if (isset($page['draft']) && $page['draft'] === true) {
                 die("Page non publiée.");
             }
-            $content = $page['content'];
+            $content = nl2br(htmlspecialchars($page['content']));
             $response = new PublicResponse();
             $tpl = $response->createPluginTemplate('wiki', 'public/wiki-view');
             $response->setTitle($page['title']);
@@ -38,6 +41,7 @@ class WikiPageController {
             $tpl->set('content', $content);
             $tpl->set('menu', $navMenu);
             $tpl->set('router', $router);
+            $tpl->set('baseUrl', $baseUrl);
             $response->addTemplate($tpl);
             return $response;
         } else {
@@ -55,81 +59,70 @@ class WikiPageController {
             $tpl->set('menu', $navMenu);
             $tpl->set('router', $router);
             $tpl->set('searchQuery', $q);
+            $tpl->set('baseUrl', $baseUrl);
             $response->addTemplate($tpl);
             return $response;
         }
     }
 
-protected function buildNavigationMenu() {
-    // Récupère l'arborescence des catégories
-    $categoriesTree = $this->categoryManager->getCategoriesTree();
+    protected function buildNavigationMenu() {
+        // Récupère l'arborescence des catégories
+        $categoriesTree = $this->categoryManager->getCategoriesTree();
 
-    // Compléter chaque catégorie avec les pages associées
-    foreach ($categoriesTree as &$cat) {
-        // On récupère les pages affectées à la catégorie
-        $pages = $this->pageManager->getPagesByCategory($cat['id']);
-        // On aplatit l'arborescence des pages pour les afficher dans la navigation
-        $cat['pages'] = $this->flattenPagesTree($pages);
-    }
-    unset($cat); // libérer la référence
-
-    // Récupère les pages orphelines
-    $orphanPages = $this->pageManager->getOrphanPages();
-    $router = ROUTER::getInstance();
-    // On s'assure que l'URL générée se termine par un slash
-    $baseUrl = rtrim($router->generate('wiki-view'), '/') . '/';
-
-    $html = '<ul>';
-    foreach ($categoriesTree as $cat) {
-        $html .= $this->renderCategoryMenu($cat, $baseUrl);
-    }
-    if (!empty($orphanPages)) {
-        $html .= '<li><strong>Pages</strong><ul>';
-        foreach ($orphanPages as $page) {
-            $html .= '<li><a href="'.$baseUrl.'?page='.$page['filename'].'">'.$page['title'].'</a></li>';
+        // Compléter chaque catégorie avec les pages associées
+        foreach ($categoriesTree as &$cat) {
+            $pages = $this->pageManager->getPagesByCategory($cat['id']);
+            $cat['pages'] = $this->flattenPagesTree($pages);
         }
-        $html .= '</ul></li>';
-    }
-    $html .= '</ul>';
-    return $html;
-}
+        unset($cat);
 
-/**
- * Fonction récursive pour aplatir un arbre de pages.
- *
- * @param array $pages
- * @return array
- */
-private function flattenPagesTree($pages) {
-    $flat = [];
-    foreach ($pages as $page) {
-        $flat[] = $page;
-        if (!empty($page['children'])) {
-            $flat = array_merge($flat, $this->flattenPagesTree($page['children']));
+        $orphanPages = $this->pageManager->getOrphanPages();
+        $router = ROUTER::getInstance();
+        $baseUrl = rtrim($router->generate('wiki-view'), '/') . '/';
+
+        $html = '<ul>';
+        foreach ($categoriesTree as $cat) {
+            $html .= $this->renderCategoryMenu($cat, $baseUrl);
         }
-    }
-    return $flat;
-}
-
-
-protected function renderCategoryMenu($cat, $baseUrl) {
-    $html = '<li><a href="'.$baseUrl.'?cat='.$cat['id'].'">'.htmlspecialchars($cat['name']).'</a>';
-    if (!empty($cat['pages'])) {
-        $html .= '<ul>';
-        foreach ($cat['pages'] as $page) {
-            $html .= '<li><a href="'.$baseUrl.'?page='.$page['filename'].'">'.htmlspecialchars($page['title']).'</a></li>';
+        if (!empty($orphanPages)) {
+            $html .= '<li><strong>Pages</strong><ul>';
+            foreach ($orphanPages as $page) {
+                $html .= '<li><a href="'.$baseUrl.'?page='.$page['filename'].'">'.$page['title'].'</a></li>';
+            }
+            $html .= '</ul></li>';
         }
         $html .= '</ul>';
+        return $html;
     }
-    if (!empty($cat['children'])) {
-        $html .= '<ul>';
-        foreach ($cat['children'] as $subcat) {
-            $html .= $this->renderCategoryMenu($subcat, $baseUrl);
-        }
-        $html .= '</ul>';
-    }
-    $html .= '</li>';
-    return $html;
-}
 
+    private function flattenPagesTree($pages) {
+        $flat = [];
+        foreach ($pages as $page) {
+            $flat[] = $page;
+            if (!empty($page['children'])) {
+                $flat = array_merge($flat, $this->flattenPagesTree($page['children']));
+            }
+        }
+        return $flat;
+    }
+
+    protected function renderCategoryMenu($cat, $baseUrl) {
+        $html = '<li><a href="'.$baseUrl.'?cat='.$cat['id'].'">'.htmlspecialchars($cat['name']).'</a>';
+        if (!empty($cat['pages'])) {
+            $html .= '<ul>';
+            foreach ($cat['pages'] as $page) {
+                $html .= '<li><a href="'.$baseUrl.'?page='.$page['filename'].'">'.htmlspecialchars($page['title']).'</a></li>';
+            }
+            $html .= '</ul>';
+        }
+        if (!empty($cat['children'])) {
+            $html .= '<ul>';
+            foreach ($cat['children'] as $subcat) {
+                $html .= $this->renderCategoryMenu($subcat, $baseUrl);
+            }
+            $html .= '</ul>';
+        }
+        $html .= '</li>';
+        return $html;
+    }
 }

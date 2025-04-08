@@ -16,16 +16,22 @@ class AdminWikiController extends AdminController {
         // Récupère l'arborescence des pages (côté admin, on affiche toutes, même les brouillons)
         $pagesTree = $this->pageManager->getPagesTree();
 
-        // Récupération de toutes les catégories depuis le système natif
-        $categories = WikiCategoryManager::getInstance()->getAllCategories();
-        // Construction d'un mapping id => nom
-        $catMapping = [];
-        foreach ($categories as $cat) {
-            $catMapping[$cat['id']] = $cat['name'];
-        }
+        // Aplatir l'arborescence pour obtenir un mapping filename => title
+$flattened = $this->flattenPages($pagesTree, 0, null);
+$pagesMapping = [];
+foreach ($flattened as $p) {
+    $pagesMapping[$p['filename']] = $p['title'];
+}
 
-        // Ajout du libellé de la catégorie dans chaque page (récursif)
-        $pagesTree = $this->addCategoryNameToPages($pagesTree, $catMapping);
+// Récupération du mapping des catégories id => nom
+$categories = WikiCategoryManager::getInstance()->getAllCategories();
+$catMapping = [];
+foreach ($categories as $cat) {
+    $catMapping[$cat['id']] = $cat['name'];
+}
+
+// Ajout des noms de catégories et du titre des parents
+$pagesTree = $this->addCategoryNameToPages($pagesTree, $catMapping, $pagesMapping);
 
         // Remarque : chaque page doit contenir aussi les clés 'created_at' et 'updated_at'
         // pour permettre au template d'afficher les dates de création et de dernière modification.
@@ -123,19 +129,27 @@ class AdminWikiController extends AdminController {
      * @param array $catMapping Mapping id => nom de catégorie
      * @return array Arbre mis à jour
      */
-    protected function addCategoryNameToPages(array $pagesTree, array $catMapping) {
-        foreach ($pagesTree as &$page) {
-            if (!empty($page['category']) && isset($catMapping[$page['category']])) {
-                $page['categoryName'] = $catMapping[$page['category']];
-            } else {
-                $page['categoryName'] = 'Aucune';
-            }
-            if (!empty($page['children'])) {
-                $page['children'] = $this->addCategoryNameToPages($page['children'], $catMapping);
-            }
+protected function addCategoryNameToPages(array $pagesTree, array $catMapping, array $pagesMapping) {
+    foreach ($pagesTree as &$page) {
+        // Ajout du nom de la catégorie
+        if (!empty($page['category']) && isset($catMapping[$page['category']])) {
+            $page['categoryName'] = $catMapping[$page['category']];
+        } else {
+            $page['categoryName'] = 'Aucune';
         }
-        return $pagesTree;
+        // Récupération du titre du parent grâce au mapping filename => title
+        if (!empty($page['parent']) && isset($pagesMapping[$page['parent']])) {
+            $page['parentTitle'] = $pagesMapping[$page['parent']];
+        } else {
+            $page['parentTitle'] = '';
+        }
+        if (!empty($page['children'])) {
+            $page['children'] = $this->addCategoryNameToPages($page['children'], $catMapping, $pagesMapping);
+        }
     }
+    return $pagesTree;
+}
+
 
     /**
      * Aplati l'arborescence des pages en une liste plate avec indentation.

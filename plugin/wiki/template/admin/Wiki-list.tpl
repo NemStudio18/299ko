@@ -10,7 +10,7 @@
             <th>Catégorie</th>
             <th>Parent</th>
             <th>Date de Création</th>
-            <th>last update</th>
+            <th>Last update</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -19,7 +19,7 @@
         <tr>
             <td>{{ page.title }}</td>
             <td>{{ page.categoryName }}</td>
-            <td>{{ page.parent }}</td>
+            <td>{{ page.parentTitle }}</td>
             <td>{{ page.created_at }}</td>
             <td>{{ page.updated_at }}</td>
             <td>
@@ -31,8 +31,10 @@
             {% for child in page.children %}
             <tr>
                 <td>&nbsp;&nbsp;&nbsp;-- {{ child.title }}</td>
-                <td>{{ child.category }}</td>
-                <td>{{ child.parent }}</td>
+                <td>{{ child.categoryName }}</td>
+                <td>{{ child.parentTitle }}</td>
+                <td>{{ child.created_at }}</td>
+                <td>{{ child.updated_at }}</td>
                 <td>
                     <a href="{{ router.generate("admin-wiki-edit") }}?page={{ child.filename }}">Éditer</a>
                     <a href="{{ router.generate("admin-wiki-delete") }}?page={{ child.filename }}" onclick="return confirm('Supprimer cette page ?');">Supprimer</a>

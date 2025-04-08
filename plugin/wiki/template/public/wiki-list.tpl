@@ -39,10 +39,11 @@
     <ul>
         {% for page in pages %}
             <li>
-                <a href="{{ router.generate("wiki-view") }}/?page={{ page.filename }}">{{ page.title }}</a>
+                <a href="{{ router.generate("wiki-view") }}?page={{ page.filename }}">{{ page.title }}</a>
             </li>
         {% endfor %}
     </ul>
 {% else %}
     <p>Aucune page trouvée.</p>
 {% endif %}</div></div>
+

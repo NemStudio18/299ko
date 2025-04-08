@@ -18,31 +18,35 @@ class WikiPageManager {
         return $this->buildTree($pages);
     }
 
-public function getPage($filename) {
-    // Si aucun nom de fichier n'est fourni (nouvelle page), retourner un tableau vide
-    if (empty($filename)) {
-        return [];
+    public function getPage($filename) {
+        // Si aucun nom de fichier n'est fourni (nouvelle page), retourner un tableau vide
+        if (empty($filename)) {
+            return [];
+        }
+        $filePath = $this->pagesDir . $filename;
+        if (!file_exists($filePath)) return null;
+        $data = json_decode(file_get_contents($filePath), true);
+        $data['filename'] = $filename;
+        return $data;
     }
-    $filePath = $this->pagesDir . $filename;
-    if (!file_exists($filePath)) return null;
-    $data = json_decode(file_get_contents($filePath), true);
-    $data['filename'] = $filename;
-    return $data;
-}
-
 
     public function savePage($data) {
-        $filename = isset($data['filename']) && !empty($data['filename']) ? $data['filename'] : uniqid().'.json';
+        $filename = isset($data['filename']) && !empty($data['filename']) ? $data['filename'] : uniqid() . '.json';
         $data['filename'] = $filename;
         $data['updated_at'] = date('Y-m-d H:i:s');
-        if (!file_exists($this->pagesDir.$filename)) {
+        $filepath = $this->pagesDir . $filename;
+        if (file_exists($filepath)) {
+            // Conserver la date de création existante
+            $oldData = json_decode(file_get_contents($filepath), true);
+            $data['created_at'] = isset($oldData['created_at']) ? $oldData['created_at'] : date('Y-m-d H:i:s');
+        } else {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
-        file_put_contents($this->pagesDir.$filename, json_encode($data, JSON_PRETTY_PRINT));
+        file_put_contents($filepath, json_encode($data, JSON_PRETTY_PRINT));
     }
 
     public function deletePage($filename) {
-        $filePath = $this->pagesDir.$filename;
+        $filePath = $this->pagesDir . $filename;
         if (file_exists($filePath)) {
             unlink($filePath);
         }
@@ -52,7 +56,7 @@ public function getPage($filename) {
         $all = $this->loadAllPages();
         $results = [];
         foreach ($all as $page) {
-            if (stripos($page['title'], $query)!==false || stripos($page['content'], $query)!==false) {
+            if (stripos($page['title'], $query) !== false || stripos($page['content'], $query) !== false) {
                 $results[] = $page;
             }
         }
@@ -87,7 +91,7 @@ public function getPage($filename) {
         foreach ($files as $file) {
             if ($file === '.' || $file === '..') continue;
             if (pathinfo($file, PATHINFO_EXTENSION) !== 'json') continue;
-            $data = json_decode(file_get_contents($this->pagesDir.$file), true);
+            $data = json_decode(file_get_contents($this->pagesDir . $file), true);
             $data['filename'] = $file;
             $pages[] = $data;
         }
