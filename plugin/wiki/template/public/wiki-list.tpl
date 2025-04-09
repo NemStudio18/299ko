@@ -25,7 +25,7 @@
 
 
 <aside class="wiki-navigation">
-<form method="get" action="{{ router.generate("wiki-view") }}">
+<form method="get" action="{{ baseUrl }}">
     <input type="text" name="q" placeholder="Rechercher…" value="{{ searchQuery }}">
     <button type="submit">Rechercher</button>
 </form>
@@ -39,7 +39,7 @@
     <ul>
         {% for page in pages %}
             <li>
-                <a href="{{ router.generate("wiki-view") }}?page={{ page.filename }}">{{ page.title }}</a>
+                <a href="{{ baseUrl }}?page={{ page.filename }}">{{ page.title }}</a>
             </li>
         {% endfor %}
     </ul>

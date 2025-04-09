@@ -1,43 +1,60 @@
 <?php
-// plugin/wiki/entities/WikiCategoryCMS.php
-// Cette classe concrète étend la classe native Category du CMS et
-// permet d'utiliser les fonctionnalités centralisées de gestion des catégories.
+/**
+ * @copyright (C) 2025, 299Ko
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
+ * @author Maxime Blanc <nemstudio18@gmail.com>
+ *
+ * @package 299Ko https://github.com/299Ko/299ko
+ *
+ * Wiki Plugin for 299Ko CMS
+ *
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
+ */
+
+// Prevent direct access to the script by checking if ROOT is defined
 defined('ROOT') or exit('Access denied!');
 
+/**
+ * Class WikiCategoryCMS
+ *
+ * This concrete class extends the native Category class of the CMS and
+ * allows using the centralized category management features.
+ */
 class WikiCategoryCMS extends Category {
     /**
-     * Constructeur de WikiCategoryCMS
-     * On définit ici les propriétés spécifiques pour le plugin Wiki.
+     * Constructor for WikiCategoryCMS.
      *
-     * @param int $id ID de la catégorie, -1 pour une nouvelle instance
+     * Here we define the plugin-specific properties for the Wiki.
+     *
+     * @param int $id Category ID, use -1 for a new instance.
      */
     public function __construct(int $id = -1) {
-        // Définition de l'ID du plugin qui utilise la gestion des catégories du CMS
+        // Set the plugin ID that uses the CMS category management
         $this->pluginId = 'wiki';
-        // On utilise 'categories' comme nom de fichier
+        // Use 'categories' as the filename
         $this->name = 'categories';
-        // Catégories hiérarchisées
+        // Enable hierarchical categories
         $this->nested = true;
-        // Une seule sélection possible
+        // Allow only a single selection
         $this->chooseMany = false;
 
-        // Appel du constructeur parent qui gère le chargement des données si $id != -1
+        // Call the parent constructor which handles data loading if $id != -1
         parent::__construct($id);
     }
 
     /**
-     * Getter public pour pluginId.
+     * Public getter for pluginId.
      *
-     * @return string
+     * @return string Returns the plugin ID.
      */
     public function getPluginId(): string {
         return $this->pluginId;
     }
 
     /**
-     * Getter public pour name.
+     * Public getter for name.
      *
-     * @return string
+     * @return string Returns the name.
      */
     public function getName(): string {
         return $this->name;

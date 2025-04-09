@@ -1,25 +1,41 @@
 <?php
-// plugin/wiki/entities/WikiCategoryManager.php
-// Adaptation de la gestion des catégories du plugin Wiki pour utiliser le core natif
-// via la classe WikiCategoryCMS.
+/**
+ * @copyright (C) 2025, 299Ko
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
+ * @author Maxime Blanc <nemstudio18@gmail.com>
+ *
+ * @package 299Ko https://github.com/299Ko/299ko
+ *
+ * Wiki Plugin for 299Ko CMS
+ *
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPLv3
+ */
+
+// Prevent direct access to the script by verifying that ROOT is defined
 defined('ROOT') or exit('Access denied!');
 
-// Inclure la classe concrète qui étend le core Category
-require_once PLUGINS.'wiki'.DS.'entities'.DS.'WikiCategoryCMS.php';
+// Include the concrete class that extends the core Category
+require_once PLUGINS . 'wiki' . DS . 'entities' . DS . 'WikiCategoryCMS.php';
 
+/**
+ * Class WikiCategoryManager
+ *
+ * Adapts the management of the Wiki plugin categories to use the native core
+ * via the WikiCategoryCMS class.
+ */
 class WikiCategoryManager {
-    // Instance unique (singleton)
+    // Singleton instance
     protected static $instance;
 
     /**
-     * Constructeur privé pour le pattern singleton.
+     * Private constructor for singleton pattern.
      */
     private function __construct() {
-        // Aucun initialisation particulière
+        // No specific initialization required
     }
 
     /**
-     * Retourne l'instance unique de WikiCategoryManager.
+     * Returns the unique instance of WikiCategoryManager.
      *
      * @return WikiCategoryManager
      */
@@ -31,29 +47,29 @@ class WikiCategoryManager {
     }
 
     /**
-     * Récupère toutes les catégories sous forme de tableau associatif.
+     * Retrieves all categories as an associative array.
      *
-     * @return array Liste des catégories (id, name, parent)
+     * @return array List of categories (id, name, parent)
      */
     public function getAllCategories() {
-        // Utilisation d'un objet dummy pour récupérer pluginId et name via les getters
+        // Create a dummy object to get pluginId and name via getters
         $dummy = new WikiCategoryCMS();
         $file = DATA_PLUGIN . $dummy->getPluginId() . '/categories-' . $dummy->getName() . '.json';
         $data = util::readJsonFile($file);
 
-        // Vérification que $data est bien un tableau
+        // Ensure that $data is an array
         if (!is_array($data)) {
             $data = [];
         }
 
         $categories = [];
-        // Parcours des catégories dans le fichier JSON
+        // Traverse the categories from the JSON file
         foreach ($data as $id => $catData) {
             $categories[] = [
                 'id'     => $id,
-                // Le core utilise 'label' pour le nom affiché
+                // The core uses 'label' for the displayed name
                 'name'   => $catData['label'] ?? '',
-                // Utilisation de 'parentId' pour la relation hiérarchique
+                // Use 'parentId' to define the hierarchical relationship
                 'parent' => $catData['parentId'] ?? ''
             ];
         }
@@ -61,22 +77,22 @@ class WikiCategoryManager {
     }
 
     /**
-     * Construit l'arborescence des catégories.
+     * Builds the categories tree.
      *
-     * @return array Arborescence des catégories
+     * @return array Returns the hierarchical tree of categories.
      */
     public function getCategoriesTree() {
         $all = $this->getAllCategories();
         $tree = [];
         $indexed = [];
 
-        // Indexation par identifiant et initialisation des enfants
+        // Index categories by their identifier and initialize their children
         foreach ($all as $cat) {
             $cat['children'] = [];
             $indexed[$cat['id']] = $cat;
         }
 
-        // Construction de l'arborescence
+        // Build the tree structure
         foreach ($indexed as $id => &$cat) {
             if (!empty($cat['parent']) && isset($indexed[$cat['parent']])) {
                 $indexed[$cat['parent']]['children'][] = &$cat;
@@ -88,10 +104,10 @@ class WikiCategoryManager {
     }
 
     /**
-     * Récupère une catégorie par son identifiant.
+     * Retrieves a category by its identifier.
      *
-     * @param mixed $id
-     * @return array|null
+     * @param mixed $id Category identifier.
+     * @return array|null Returns the category data or null if not found.
      */
     public function getCategory($id) {
         $all = $this->getAllCategories();
@@ -104,9 +120,9 @@ class WikiCategoryManager {
     }
 
     /**
-     * Sauvegarde une catégorie via le système natif.
+     * Saves a category using the native system.
      *
-     * @param array $data Données de la catégorie (id, name, parent)
+     * @param array $data Category data (id, name, parent)
      */
     public function saveCategory($data) {
         $dummy = new WikiCategoryCMS();
@@ -116,15 +132,15 @@ class WikiCategoryManager {
             $categories = [];
         }
 
-        // Si 'id' est vide, on en génère un nouveau via uniqid()
+        // If 'id' is empty, generate a new one using uniqid()
         $id = !empty($data['id']) ? $data['id'] : uniqid();
 
         $categories[$id] = [
-            // On stocke le nom sous 'label'
+            // Store the name under 'label'
             'label'      => $data['name'],
-            // Le parent est stocké sous 'parentId'
+            // The parent is stored under 'parentId'
             'parentId'   => $data['parent'] ?? '',
-            // On préserve d'éventuelles données existantes
+            // Preserve any existing data
             'items'      => $categories[$id]['items'] ?? [],
             'childrenId' => $categories[$id]['childrenId'] ?? [],
             'pluginArgs' => $categories[$id]['pluginArgs'] ?? []
@@ -132,11 +148,10 @@ class WikiCategoryManager {
         file_put_contents($file, json_encode($categories, JSON_PRETTY_PRINT));
     }
 
-
     /**
-     * Supprime une catégorie en supprimant sa clé du fichier natif.
+     * Deletes a category by removing its key from the native file.
      *
-     * @param mixed $id Identifiant de la catégorie à supprimer
+     * @param mixed $id Identifier of the category to delete.
      */
     public function deleteCategory($id) {
         $dummy = new WikiCategoryCMS();

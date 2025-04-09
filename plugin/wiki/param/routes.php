@@ -12,6 +12,13 @@ $router->map('GET', '/admin/wiki/edit[/?]', 'AdminWikiController#edit', 'admin-w
 $router->map('POST', '/admin/wiki/save[/?]', 'AdminWikiController#save', 'admin-wiki-save');
 $router->map('GET', '/admin/wiki/delete[/?]', 'AdminWikiController#delete', 'admin-wiki-delete');
 
+// Routes côté admin pour l'historique des versions
+$router->map('GET', '/admin/wiki/versions[/?]', 'AdminWikiVersionsController#index', 'admin-wiki-versions');
+$router->map('GET', '/admin/wiki/versions/restore[/?]', 'AdminWikiVersionsController#restore', 'admin-wiki-versions-restore');
+$router->map('GET', '/admin/wiki/versions/view[/?]', 'AdminWikiVersionsController#viewVersion', 'admin-wiki-versions-view');
+
+
+
 // Routes côté admin pour la gestion des catégories
 $router->map('GET', '/admin/wiki/categories[/?]', 'AdminWikiCategoriesController#index', 'admin-wiki-categories');
 $router->map('GET', '/admin/wiki/categories/edit[/?]', 'AdminWikiCategoriesController#edit', 'admin-wiki-categories-edit');
