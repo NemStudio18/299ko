@@ -7,7 +7,6 @@
 
 # themes
 !/theme/default/
-/theme/
 
 #editor
 .vscode/
