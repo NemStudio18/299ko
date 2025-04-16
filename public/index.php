@@ -10,7 +10,7 @@
  *
  * @package 299Ko https://github.com/299Ko/299ko
  */
-const ROOT = '.' . DIRECTORY_SEPARATOR;
+const ROOT = '..' . DIRECTORY_SEPARATOR;
 const DS = DIRECTORY_SEPARATOR;
 
 include_once(ROOT . 'common' . DS . 'common.php');
