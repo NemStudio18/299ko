@@ -147,8 +147,13 @@ class util
         return $data;
     }
 
-    ## Sauvegarde un tableau dans un fichier au format json
-
+    /**
+     * Write a json file with the given data. If the file does not exist, it will be created.
+     * If the file already exists, its content will be overwritten.
+     * @param string $file The path to the json file
+     * @param array|object $data The data to write in the json file
+     * @return bool True if the file was written successfully, false otherwise
+     */
     public static function writeJsonFile($file, $data)
     {
         if (@file_put_contents($file, json_encode($data), LOCK_EX))
@@ -156,8 +161,13 @@ class util
         return false;
     }
 
-    ## Retourne un tableau provenant d'un fichier au format json
-
+    /**
+     * Reads a json file and returns its content as an associative array or an object.
+     * If the file does not exist, return false.
+     * @param string $file The path to the json file
+     * @param bool $assoc If true, the function will return an associative array, else an object
+     * @return array|false The content of the json file or false if the file does not exist
+     */
     public static function readJsonFile($file, $assoc = true)
     {
         if (!file_exists($file)) {

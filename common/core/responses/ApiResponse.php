@@ -22,7 +22,7 @@ class ApiResponse extends Response
     const STATUS_NOT_FOUND = 'HTTP/1.1 404 Not Found';
 
     public string $status = self::STATUS_NOT_FOUND;
-    public ?string $body = null;
+    public $body = null;
 
     protected $headers = [
         "Access-Control-Allow-Origin: *",

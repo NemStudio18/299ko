@@ -44,7 +44,7 @@ class StringResponse extends Response {
      * @return Template
      */
     public function createPluginTemplate(string $pluginName, string $templateName):Template {
-        $themeFile = $this->theme->getPluginTemplatePath($pluginName, $templateName);
+        $themeFile = $this->theme->getPluginTemplatePath($pluginName, $templateName) ?? '';
         if (file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
