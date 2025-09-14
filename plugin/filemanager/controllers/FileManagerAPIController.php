@@ -35,63 +35,63 @@ class FileManagerAPIController extends AdminController {
 
     public function upload($token) {
         if (!$this->user->isAuthorized()) {
-            echo json_encode(['success' => 0]);
+            echo json_encode(['success' => 0, 'error' => 'Unauthorized']);
             die();
         }
+        
+        // Security fix for CVE-2025-8265: Additional validation before upload
+        if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+            echo json_encode(['success' => 0, 'error' => 'No valid file uploaded']);
+            die();
+        }
+        
         $this->getSentDir();
         $this->filemanager = new FileManager($this->fullDir);
-        if (isset($_FILES['image']['name']) != '') {
-            $image = $_FILES['image']['name'];
-            if ($this->filemanager->uploadFile('image') !== false) {
-                echo json_encode(['success' => 1]);
+        
+        if (isset($_FILES['image']['name']) && !empty($_FILES['image']['name'])) {
+            $result = $this->filemanager->uploadFile('image');
+            if ($result !== false) {
+                echo json_encode(['success' => 1, 'url' => $result]);
                 die();
             } else {
-                echo json_encode(['success' => 0]);
+                echo json_encode(['success' => 0, 'error' => 'Upload failed - file validation failed']);
                 die();
             }
+        } else {
+            echo json_encode(['success' => 0, 'error' => 'No file specified']);
+            die();
         }
     }
 
     public function uploadAPI($token) {
         if (!$this->user->isAuthorized()) {
-            header("HTTP/1.1 500 Server Error");
+            header("HTTP/1.1 401 Unauthorized");
+            echo json_encode(['error' => 'Unauthorized']);
             die();
         }
+        
         $temp = current($_FILES);
-        if (is_uploaded_file($temp['tmp_name'])) {
-            // Sanitize input
-            if (preg_match("/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/", $temp['name'])) {
-                header("HTTP/1.1 400 Invalid file name.");
-                return;
-            }
-
-            // Verify extension
-            if (!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), 
-                    ["gif", "jpg", "png", "ico", "bmp", "jpeg"])) {
-                header("HTTP/1.1 400 Invalid extension.");
-                return;
-            }
-
-            $tinyManager = new FileManager(UPLOAD . 'files/API');
-            
-            $uploaded = $tinyManager->uploadFile('file');
-            if ($uploaded !== false) {
-                echo json_encode(['location' => $uploaded]);
-                die();
-            }
-
-            $imageFolder = UPLOAD;
-
-            $filetowrite = $imageFolder . $temp['name'];
-            move_uploaded_file($temp['tmp_name'], $filetowrite);
-
-            $baseurl = util::urlBuild('');
-
-            echo json_encode(['location' => $baseurl . $filetowrite]);
+        if (!is_uploaded_file($temp['tmp_name'])) {
+            header("HTTP/1.1 400 Bad Request");
+            echo json_encode(['error' => 'No valid file uploaded']);
             die();
         }
-        header("HTTP/1.1 500 Server Error");
-        die();
+        
+        // Security fix for CVE-2025-8265: Use secure FileManager for all uploads
+        $tinyManager = new FileManager(UPLOAD . 'files/API');
+        
+        // Create a temporary $_FILES array for the secure upload method
+        $_FILES['file'] = $temp;
+        
+        $uploaded = $tinyManager->uploadFile('file');
+        if ($uploaded !== false) {
+            echo json_encode(['location' => $uploaded]);
+            die();
+        } else {
+            header("HTTP/1.1 400 Bad Request");
+            echo json_encode(['error' => 'File validation failed']);
+            die();
+        }
     }
 
     public function delete($token) {
@@ -183,6 +183,10 @@ class FileManagerAPIController extends AdminController {
         if ($this->dir === 'Back%To%Home%') {
             $this->dir = '';
         }
+        
+        // Security fix for CVE-2025-10232: Path traversal prevention
+        $this->dir = $this->sanitizeDirectoryPath($this->dir);
+        
         $this->dir = trim($this->dir, '/');
         if ($this->dir !== '') {
             $this->dirParts = explode('/', $this->dir);
@@ -196,7 +200,58 @@ class FileManagerAPIController extends AdminController {
         } else {
             $this->dirParts = [];
         }
-        $this->fullDir = UPLOAD . 'files/' . trim($this->dir, '/');
+        
+        // Additional security: ensure the final path is within allowed directory
+        $this->fullDir = $this->validateAndBuildFullPath($this->dir);
+    }
+    
+    /**
+     * Sanitize directory path to prevent path traversal attacks
+     * 
+     * @param string $path The input path to sanitize
+     * @return string Sanitized path
+     */
+    private function sanitizeDirectoryPath($path) {
+        // Remove any path traversal attempts
+        $path = str_replace(['../', '..\\', '..%2F', '..%5C'], '', $path);
+        $path = str_replace(['%2E%2E%2F', '%2E%2E%5C'], '', $path);
+        
+        // Decode URL encoding
+        $path = urldecode($path);
+        
+        // Remove any remaining path traversal attempts after decoding
+        $path = str_replace(['../', '..\\'], '', $path);
+        
+        // Remove any null bytes or other dangerous characters
+        $path = str_replace(["\0", "\x00"], '', $path);
+        
+        // Remove leading/trailing slashes and normalize
+        $path = trim($path, '/\\');
+        
+        return $path;
+    }
+    
+    /**
+     * Validate and build the full directory path ensuring it stays within allowed bounds
+     * 
+     * @param string $dir The directory path to validate
+     * @return string The validated full directory path
+     */
+    private function validateAndBuildFullPath($dir) {
+        $baseDir = UPLOAD . 'files/';
+        $fullPath = $baseDir . $dir;
+        
+        // Resolve the real path to prevent any remaining traversal
+        $realBaseDir = realpath($baseDir);
+        $realFullPath = realpath($fullPath);
+        
+        // If realpath fails or the resolved path is not within the base directory, use base directory
+        if ($realFullPath === false || strpos($realFullPath, $realBaseDir) !== 0) {
+            logg("Path traversal attempt detected in FileManager: " . $dir, "WARNING");
+            return $baseDir;
+        }
+        
+        return $realFullPath . '/';
     }
 
 }
