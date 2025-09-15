@@ -67,7 +67,8 @@ class Template {
     public function output() {
         if (!file_exists($this->file)) {
             logg("Error loading template file ($this->file)", "ERROR");
-            return "Error loading template file ($this->file).<br/>";
+            // Ne pas exposer le chemin dans la réponse utilisateur
+            return "Template error. Please contact administrator.<br/>";
         }
         ob_start();
         $this->get_content();

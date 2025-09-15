@@ -69,32 +69,49 @@ class UsersManager
     {
         $parts = explode('//', $_COOKIE['koAutoConnect']);
         $mail = $parts[0] ?? '';
-        $cryptedPwd = $parts[1] ?? '';
+        $rememberToken = $parts[1] ?? '';
 
-        $user = User::find('email',$mail);
+        $user = User::find('email', $mail);
         if ($user === null) {
-            // User dont exist
-            setcookie('koAutoConnect', '/', 1, '/');
+            // User doesn't exist
+            self::clearRememberCookie();
             return false;
         }
-        
-        // Use new secure password verification
-        if (!self::verifyPassword($cryptedPwd, $user->pwd)) {
-            // Incorrect mail & pwd
-            setcookie('koAutoConnect', '/', 1, '/');
-            return false;
+
+        // Vérifier le token de session et son expiration
+        if (isset($user->remember_token) && 
+            isset($user->remember_token_expires) &&
+            $user->remember_token === $rememberToken &&
+            $user->remember_token_expires > time()) {
+            
+            $user->token = self::generateToken();
+            $user->save();
+            self::logon($user);
+            return true;
         }
-        
-        // Check if password needs rehashing (migration from SHA1)
-        if (self::needsPasswordRehash($user->pwd)) {
-            $user->pwd = self::encrypt($cryptedPwd);
-            logg("Password hash migrated for user: " . $mail, "INFO");
-        }
-        
-        $user->token = self::generateToken();
+
+        // Token invalide ou expiré
+        self::clearRememberCookie();
+        return false;
+    }
+
+    /**
+     * Clears the remember me cookie.
+     */
+    private static function clearRememberCookie(): void
+    {
+        setcookie('koAutoConnect', '', 1, '/');
+    }
+
+    /**
+     * Invalidates all remember tokens for a user (useful for logout).
+     */
+    public static function invalidateRememberTokens(User $user): void
+    {
+        $user->remember_token = null;
+        $user->remember_token_expires = null;
         $user->save();
-        self::logon($user);
-        return true;
+        self::clearRememberCookie();
     }
 
     /**
@@ -115,35 +132,62 @@ class UsersManager
     }
 
     /**
-     * Logs in the given user.
+     * Logs in the given user with session fixation protection.
      *
      * @param User $user The user to log in.
      */
     protected static function logon(User $user):void
     {
+        // Régénérer l'ID de session pour éviter la fixation
+        session_regenerate_id(true);
+        
         $_SESSION['email'] = $user->email;
         $_SESSION['token'] = $user->token;
+        $_SESSION['user_id'] = $user->id;
+        
+        // Ajouter des métadonnées de session pour la sécurité
+        $_SESSION['created_at'] = time();
+        $_SESSION['last_activity'] = time();
+        $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
     }
 
     /**
-     * Sets remember me cookies for the given user.
+     * Sets remember me cookies for the given user using secure tokens.
      */
     protected static function setRememberCookies(User $user)
     {
+        // Générer un token de session sécurisé
+        $rememberToken = self::generateRememberToken();
+        
+        // Stocker le token en base de données avec expiration
+        $user->remember_token = $rememberToken;
+        $user->remember_token_expires = time() + (60 * 24 * 3600); // 60 jours
+        $user->save();
+        
         setcookie(
             'koAutoConnect',
-            $user->email . '//' . $user->pwd,
+            $user->email . '//' . $rememberToken,
             [
                 'expires' => time() + 60 * 24 * 3600,
                 'secure' => true,
                 'httponly' => true,
+                'samesite' => 'Strict',
                 'path' => '/'
             ]
         );
     }
 
     /**
-     * Return the current User, if connected by session
+     * Generates a secure remember token.
+     */
+    private static function generateRememberToken(): string
+    {
+        return bin2hex(random_bytes(32));
+    }
+
+    /**
+     * Return the current User, if connected by session with security validation
      * @return User|null User or false if not connected
      */
     public static function getCurrentUser(): ?User
@@ -151,13 +195,61 @@ class UsersManager
         if (!isset($_SESSION['email'])) {
             return null;
         }
+        
         $user = User::find('email', $_SESSION['email']);
-        if ($user !== null) {
-            if ($_SESSION['token'] === $user->token) {
-                return $user;
-            }
+        if ($user === null) {
+            return null;
         }
-        return null;
+        
+        // Vérifier le token de session
+        if ($_SESSION['token'] !== $user->token) {
+            self::destroySession();
+            return null;
+        }
+        
+        // Vérifier la validité de la session (détection d'anomalies)
+        if (!self::validateSession($user)) {
+            self::destroySession();
+            return null;
+        }
+        
+        // Mettre à jour l'activité
+        $_SESSION['last_activity'] = time();
+        
+        return $user;
+    }
+
+    /**
+     * Validates session security (IP, User-Agent, timeout)
+     */
+    private static function validateSession(User $user): bool
+    {
+        // Vérifier l'IP (optionnel, peut causer des problèmes avec les proxies)
+        // if (isset($_SESSION['ip_address']) && $_SESSION['ip_address'] !== ($_SERVER['REMOTE_ADDR'] ?? 'unknown')) {
+        //     return false;
+        // }
+        
+        // Vérifier le User-Agent
+        if (isset($_SESSION['user_agent']) && $_SESSION['user_agent'] !== ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown')) {
+            return false;
+        }
+        
+        // Vérifier le timeout de session (24 heures)
+        $sessionTimeout = 24 * 3600; // 24 heures
+        if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $sessionTimeout) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Destroys the current session
+     */
+    private static function destroySession(): void
+    {
+        session_destroy();
+        session_start();
     }
 
     /**
