@@ -173,13 +173,91 @@ class Template {
     protected function _include($matches) {
         $var = $matches[1];
         $file = $this->getVar($var, $this->data);
+        
+        // Validation stricte du chemin pour éviter la traversée de chemin
+        if (!$this->isValidTemplatePath($file)) {
+            logg("Invalid template path attempted: " . $file, "WARNING");
+            return '';
+        }
+        
         if (file_exists($file)) {
             if (util::getFileExtension($file) === 'tpl') {
-                $str = '$tpl = new Template(\'' . $file . '\'); echo $tpl->output();';
+                $str = '$tpl = new Template(\'' . addslashes($file) . '\'); echo $tpl->output();';
                 return '<?php ' . $str . ' ?>';
             }
-            return '<?php $core = core::getInstance(); include \'' . $file . '\'; ?>';
+            return '<?php $core = core::getInstance(); include \'' . addslashes($file) . '\'; ?>';
         }
+        
+        return '';
+    }
+
+    /**
+     * Validates that a template path is safe and within allowed directories
+     */
+    private function isValidTemplatePath($path): bool
+    {
+        if (empty($path) || !is_string($path)) {
+            return false;
+        }
+        
+        // Nettoyer le chemin des patterns de traversée et normaliser les séparateurs
+        $cleanPath = str_replace(['../', '..\\', './', '.\\'], '', $path);
+        $cleanPath = str_replace('\\', '/', $cleanPath);
+        
+        // Normaliser le chemin
+        $normalizedPath = realpath($cleanPath);
+        if ($normalizedPath === false) {
+            // Si realpath échoue, essayer avec le chemin relatif à ROOT
+            $relativePath = ROOT . $cleanPath;
+            $normalizedPath = realpath($relativePath);
+            if ($normalizedPath === false) {
+                // Si ça échoue encore, vérifier directement avec les préfixes autorisés
+                $allowedPrefixes = [
+                    'plugin/',
+                    'theme/',
+                    'common/template/',
+                    'common/core-plugins/'
+                ];
+                
+                foreach ($allowedPrefixes as $prefix) {
+                    if (strpos($cleanPath, $prefix) === 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        
+        // Définir les répertoires autorisés
+        $allowedPaths = [
+            realpath(ROOT . 'common' . DS . 'template' . DS),
+            realpath(ROOT . 'theme' . DS),
+            realpath(ROOT . 'plugin' . DS),
+            realpath(ROOT . 'common' . DS . 'core-plugins' . DS)
+        ];
+        
+        // Vérifier que le chemin est dans un répertoire autorisé
+        foreach ($allowedPaths as $allowedPath) {
+            if ($allowedPath !== false && strpos($normalizedPath, $allowedPath) === 0) {
+                return true;
+            }
+        }
+        
+        // Vérification supplémentaire pour les chemins qui commencent par les dossiers autorisés
+        $allowedPrefixes = [
+            'plugin/',
+            'theme/',
+            'common/template/',
+            'common/core-plugins/'
+        ];
+        
+        foreach ($allowedPrefixes as $prefix) {
+            if (strpos($cleanPath, $prefix) === 0) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     protected function _callHook($matches) {

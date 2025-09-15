@@ -25,7 +25,7 @@ class AdminController extends Controller {
 
     public function __construct() {
         parent::__construct();
-        if (IS_ADMIN === false) {
+        if (IS_ADMIN() === false) {
             $this->core->error404();
         }
         $pluginName = $this->core->getPluginToCall();

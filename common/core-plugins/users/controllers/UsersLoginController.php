@@ -25,16 +25,27 @@ class UsersLoginController extends PublicController
 
     public function loginSend()
     {
+        logg("LOGIN_SEND: Method called", "INFO");
+        logg("LOGIN_SEND: POST data: " . json_encode($_POST), "INFO");
+        
         if (empty($_POST['adminEmail']) || empty($_POST['adminPwd']) || $_POST['_email'] !== '') {
+            logg("LOGIN_SEND: Empty fields or robot detected", "INFO");
             // Empty field or robot
             return $this->login();
         }
+        
         $useCookies = $_POST['remember'] ?? false;
+        logg("LOGIN_SEND: Calling UsersManager::login with email: " . trim($_POST['adminEmail']), "INFO");
+        
         $logged = UsersManager::login(trim($_POST['adminEmail']), $_POST['adminPwd'], $useCookies);
+        logg("LOGIN_SEND: UsersManager::login returned: " . ($logged ? 'true' : 'false'), "INFO");
+        
         if ($logged) {
+            logg("LOGIN_SEND: Login successful, redirecting to admin", "INFO");
             show::msg(Lang::get("users.now-connected"), 'success');
             $this->core->redirect($this->router->generate('admin'));
         } else {
+            logg("LOGIN_SEND: Login failed, redirecting to login", "INFO");
             show::msg(Lang::get("users.bad-credentials"), 'error');
             $this->core->redirect($this->router->generate('login'));
         }

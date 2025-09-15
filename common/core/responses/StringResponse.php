@@ -48,7 +48,12 @@ class StringResponse extends Response {
         if (file_exists($themeFile)) {
             $tpl = new Template($themeFile);
         } else {
-            $tpl = new Template(PLUGINS . $pluginName .'/template/' . $templateName . '.tpl');
+            // Determine plugin path (core-plugins first, then regular plugins)
+            $pluginPath = CORE_PLUGINS . $pluginName . '/';
+            if (!is_dir($pluginPath)) {
+                $pluginPath = PLUGINS . $pluginName . '/';
+            }
+            $tpl = new Template($pluginPath . 'template/' . $templateName . '.tpl');
         }
         return $tpl;
     }

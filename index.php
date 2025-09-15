@@ -21,11 +21,16 @@ if (!$core->isInstalled()) {
     die();
 }
 
-define('IS_LOGGED', UsersManager::isLogged());
-// For futures versions
-define('IS_ADMIN', IS_LOGGED);
+// Fonctions pour vérifier l'état de connexion en temps réel
+function IS_LOGGED(): bool {
+    return UsersManager::isLogged();
+}
 
-Template::addGlobal('IS_LOGGED', IS_LOGGED);
-Template::addGlobal('IS_ADMIN', IS_ADMIN);
+function IS_ADMIN(): bool {
+    return IS_LOGGED();
+}
+
+Template::addGlobal('IS_LOGGED', IS_LOGGED());
+Template::addGlobal('IS_ADMIN', IS_ADMIN());
 
 $core->executeCallback($router, $runPlugin);

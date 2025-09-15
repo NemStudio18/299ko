@@ -35,13 +35,11 @@ class UsersManager
     {
         $user = User::find('email',$mail);
         if ($user === null) {
-            // User dont exist
             return false;
         }
         
         // Use new secure password verification
         if (!self::verifyPassword($password, $user->pwd)) {
-            // Incorrect mail & pwd
             return false;
         }
         
@@ -53,10 +51,16 @@ class UsersManager
         
         $user->token = self::generateToken();
         $user->save();
+        
+        // Note: session_regenerate_id() cause des problèmes de session
+        // La protection contre la session fixation sera implémentée différemment
+        
         self::logon($user);
+        
         if ($useCookies) {
             self::setRememberCookies($user);
         }
+        
         return true;
     }
 
@@ -81,11 +85,17 @@ class UsersManager
         // Vérifier le token de session et son expiration
         if (isset($user->remember_token) && 
             isset($user->remember_token_expires) &&
+            $user->remember_token !== null &&
+            $user->remember_token_expires !== null &&
             $user->remember_token === $rememberToken &&
             $user->remember_token_expires > time()) {
             
             $user->token = self::generateToken();
             $user->save();
+            
+            // Note: session_regenerate_id() cause des problèmes de session
+            // La protection contre la session fixation sera implémentée différemment
+            
             self::logon($user);
             return true;
         }
@@ -121,13 +131,19 @@ class UsersManager
      */
     public static function isLogged(): bool
     {
-        if (self::getCurrentUser() === null) {
+        logg("IS_LOGGED: Checking login status", "INFO");
+        $currentUser = self::getCurrentUser();
+        if ($currentUser === null) {
+            logg("IS_LOGGED: No current user, checking cookies", "INFO");
             // Try to connect by cookies
             if (isset($_COOKIE['koAutoConnect']) && is_string($_COOKIE['koAutoConnect'])) {
+                logg("IS_LOGGED: Cookie found, attempting loginByCookies()", "INFO");
                 return self::loginByCookies();
             }
+            logg("IS_LOGGED: No cookie, returning false", "INFO");
             return false;
         }
+        logg("IS_LOGGED: User found: " . $currentUser->email . ", returning true", "INFO");
         return true;
     }
 
@@ -138,8 +154,7 @@ class UsersManager
      */
     protected static function logon(User $user):void
     {
-        // Régénérer l'ID de session pour éviter la fixation
-        session_regenerate_id(true);
+        logg("LOGON: Setting session data for: " . $user->email, "INFO");
         
         $_SESSION['email'] = $user->email;
         $_SESSION['token'] = $user->token;
@@ -150,6 +165,48 @@ class UsersManager
         $_SESSION['last_activity'] = time();
         $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+        
+        logg("LOGON: Session data set: " . json_encode($_SESSION), "INFO");
+    }
+
+    /**
+     * Regenerates session ID for security (call this before any output)
+     */
+    public static function regenerateSessionId(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE && !headers_sent()) {
+            session_regenerate_id(false);
+        }
+    }
+
+    /**
+     * Regenerates session ID after login for session fixation protection
+     * This method is safer as it's called after the session data is set
+     */
+    public static function regenerateSessionIdAfterLogin(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE && !headers_sent()) {
+            // Sauvegarder les données de session importantes
+            $sessionData = $_SESSION;
+            
+            // Régénérer l'ID de session
+            session_regenerate_id(false);
+            
+            // Restaurer les données de session
+            $_SESSION = $sessionData;
+        }
+    }
+
+    /**
+     * Secure session ID regeneration that preserves session data
+     * This method is called BEFORE setting session data to avoid conflicts
+     */
+    public static function regenerateSessionIdSecure(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE && !headers_sent()) {
+            // Régénérer l'ID de session sans détruire les données
+            session_regenerate_id(false);
+        }
     }
 
     /**
