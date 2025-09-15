@@ -48,7 +48,7 @@ class plugin {
 
     ## Constructeur
 
-    public function __construct($name, $config = [], $infos = [], $hooks = [], $initConfig = []) {
+    public function __construct($name, $config = [], $infos = [], $hooks = [], $initConfig = [], $pluginPath = null) {
         $core = core::getInstance();
         // Identifiant du plugin
         $this->name = $name;
@@ -68,17 +68,26 @@ class plugin {
         $this->setTitleTag($infos['name']);
         // Titre de page
         $this->setMainTitle($infos['name']);
+        
+        // Determine plugin path (core-plugins first, then regular plugins)
+        if ($pluginPath === null) {
+            $pluginPath = CORE_PLUGINS . $this->name . '/';
+            if (!is_dir($pluginPath)) {
+                $pluginPath = PLUGINS . $this->name . '/';
+            }
+        }
+        
         // Fichier php principal
-        $this->libFile = (file_exists(PLUGINS . $this->name . '/' . $this->name . '.php')) ? PLUGINS . $this->name . '/' . $this->name . '.php' : false;
+        $this->libFile = (file_exists($pluginPath . $this->name . '.php')) ? $pluginPath . $this->name . '.php' : false;
 
         $this->setCallables();
         
         // CSS
-        $this->publicCssFile = (file_exists(PLUGINS . $this->name . '/template/public.css')) ? PLUGINS . $this->name . '/template/public.css' : false;
-        $this->adminCssFile = (file_exists(PLUGINS . $this->name . '/template/admin.css')) ? util::urlBuild(PLUGINS . $this->name . '/template/admin.css') : false;
+        $this->publicCssFile = (file_exists($pluginPath . 'template/public.css')) ? $pluginPath . 'template/public.css' : false;
+        $this->adminCssFile = (file_exists($pluginPath . 'template/admin.css')) ? util::urlBuild($pluginPath . 'template/admin.css') : false;
         // JS
-        $this->publicJsFile = (file_exists(PLUGINS . $this->name . '/template/public.js')) ? PLUGINS . $this->name . '/template/public.js' : false;
-        $this->adminJsFile = (file_exists(PLUGINS . $this->name . '/template/admin.js')) ? util::urlBuild(PLUGINS . $this->name . '/template/admin.js') : false;
+        $this->publicJsFile = (file_exists($pluginPath . 'template/public.js')) ? $pluginPath . 'template/public.js' : false;
+        $this->adminJsFile = (file_exists($pluginPath . 'template/admin.js')) ? util::urlBuild($pluginPath . 'template/admin.js') : false;
         // Répertoir de sauvegarde des données internes du plugin
         $this->dataPath = (is_dir(DATA_PLUGIN . $this->name)) ? DATA_PLUGIN . $this->name . '/' : false;
         // Configuration d'usine
@@ -110,18 +119,25 @@ class plugin {
      */
     protected function determineTemplatesFiles() {
         $core = core::getInstance();
+        
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $this->name . '/';
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $this->name . '/';
+        }
+        
         // Template public (peut etre le template par defaut ou un template présent dans le dossier du theme portant le nom du plugin)
        
 
         // Template parametres
-        if (file_exists(PLUGINS . $this->name . '/template/param.tpl'))
-            $this->paramTemplate = PLUGINS . $this->name . '/template/param.tpl';
+        if (file_exists($pluginPath . 'template/param.tpl'))
+            $this->paramTemplate = $pluginPath . 'template/param.tpl';
         else
             $this->paramTemplate = false;
 
         // Template d'aide
-        if (file_exists(PLUGINS . $this->name . '/template/help.tpl'))
-            $this->helpTemplate = PLUGINS . $this->name . '/template/help.tpl';
+        if (file_exists($pluginPath . 'template/help.tpl'))
+            $this->helpTemplate = $pluginPath . 'template/help.tpl';
         else
             $this->helpTemplate = false;
     }
@@ -301,17 +317,32 @@ class plugin {
     }
     
     public function loadLangFile() {
-        lang::loadLanguageFile(PLUGINS . $this->name . '/langs/');
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $this->name . '/';
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $this->name . '/';
+        }
+        lang::loadLanguageFile($pluginPath . 'langs/');
     }
     
     public function loadRoutes() {
-        if (is_file(PLUGINS . $this->name . '/param/routes.php')) {
-            require_once PLUGINS . $this->name . '/param/routes.php';
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $this->name . '/';
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $this->name . '/';
+        }
+        if (is_file($pluginPath . 'param/routes.php')) {
+            require_once $pluginPath . 'param/routes.php';
         }
     }
     
     public function loadControllers() {
-        foreach (glob(PLUGINS . $this->name . '/controllers/' . "*.php") as $file) {
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $this->name . '/';
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $this->name . '/';
+        }
+        foreach (glob($pluginPath . 'controllers/' . "*.php") as $file) {
             include_once $file;
         }
     }

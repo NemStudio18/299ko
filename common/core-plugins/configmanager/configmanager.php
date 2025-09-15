@@ -12,9 +12,9 @@
  */
 defined('ROOT') or exit('Access denied!');
 
-require_once PLUGINS . 'configmanager/lib/UpdaterManager.php';
-require_once PLUGINS . 'configmanager/entities/ConfigManagerBackupsManager.php';
-require_once PLUGINS . 'configmanager/entities/ConfigManagerBackup.php';
+require_once CORE_PLUGINS . 'configmanager/lib/UpdaterManager.php';
+require_once CORE_PLUGINS . 'configmanager/entities/ConfigManagerBackupsManager.php';
+require_once CORE_PLUGINS . 'configmanager/entities/ConfigManagerBackup.php';
 
 ## Fonction d'installation
 

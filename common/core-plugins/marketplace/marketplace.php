@@ -17,10 +17,10 @@
 
 defined('ROOT') or exit('Access denied!');
 
-require_once PLUGINS . 'marketplace/lib/MarketPlaceCurl.php';
-require_once PLUGINS . 'marketplace/lib/MarketPlaceManager.php';
+require_once CORE_PLUGINS . 'marketplace/lib/MarketPlaceCurl.php';
+require_once CORE_PLUGINS . 'marketplace/lib/MarketPlaceManager.php';
 
-require_once PLUGINS . 'marketplace/entities/MarketPlaceRessource.php';
+require_once CORE_PLUGINS . 'marketplace/entities/MarketPlaceRessource.php';
 
 function marketplaceInstall() {
     $marketConfig = util::readJsonFile(DATA_PLUGIN . 'marketplace/marketplace.json');

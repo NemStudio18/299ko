@@ -31,7 +31,13 @@ class AdminResponse extends Response {
      * @return Template
      */
     public function createPluginTemplate(string $pluginName, string $templateName):Template {
-        $file = PLUGINS . $pluginName . '/template/' . $templateName . '.tpl';
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $pluginName . '/';
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $pluginName . '/';
+        }
+        
+        $file = $pluginPath . 'template/' . $templateName . '.tpl';
         $tpl = new Template($file);
         return $tpl;
     }

@@ -19,6 +19,7 @@ const DATA_PLUGIN = ROOT . 'data' . DS . 'plugin' . DS;
 const CACHE = ROOT . 'data' . DS . 'cache' . DS;
 const THEMES = ROOT . 'theme' . DS;
 const PLUGINS = ROOT . 'plugin' . DS;
+const CORE_PLUGINS = ROOT . 'common' . DS . 'core-plugins' . DS;
 const ADMIN_PATH = ROOT . 'admin' . DS;
 const FONTICON = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css';
 const FANCYCSS = 'https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.min.css';

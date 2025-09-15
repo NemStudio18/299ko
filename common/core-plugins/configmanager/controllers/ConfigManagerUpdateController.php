@@ -34,7 +34,7 @@ class ConfigManagerUpdateController extends AdminController {
             show::msg(Lang::get('configmanager-update-dir-not-found'), 'error');
             $this->core->redirect($this->router->generate('configmanager-admin'));
         }
-        require_once PLUGINS . 'configmanager/lib/UpdaterManualManager.php';
+        require_once CORE_PLUGINS . 'configmanager/lib/UpdaterManualManager.php';
         $updater = new UpdaterManualManager();
         if ($updater->check()) {
             $nextVersion = $updater->getNextVersion();

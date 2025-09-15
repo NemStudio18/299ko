@@ -129,11 +129,18 @@ class UpdaterManager {
     protected function treatPlugin($filename, $ignoreExist) {
         preg_match('/^plugin\/(\w+)\/(.*)$/i', $filename, $matches);
         $plugin = $matches[1];
-        if (is_dir(PLUGINS . $plugin) === false && $ignoreExist === false) {
+        
+        // Check both core-plugins and regular plugins
+        $pluginPath = CORE_PLUGINS . $plugin;
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $plugin;
+        }
+        
+        if (is_dir($pluginPath) === false && $ignoreExist === false) {
             // plugin is not installed, no treatment
             return false;
         }
-        return PLUGINS . $plugin . '/' . $matches[2];
+        return $pluginPath . '/' . $matches[2];
     }
     
     protected function treatTheme($filename) {
@@ -281,7 +288,7 @@ class UpdaterManager {
             // No script to run before change files
             return;
         }
-        $tmpFile = PLUGINS . 'configmanager' . '/tmp_beforeChangeFiles.php';
+        $tmpFile = CORE_PLUGINS . 'configmanager' . '/tmp_beforeChangeFiles.php';
         if (@file_put_contents($tmpFile, $content, LOCK_EX)) {
             $success = require_once $tmpFile;
             @unlink($tmpFile);
@@ -297,7 +304,7 @@ class UpdaterManager {
             // No script to run before change files
             return;
         }
-        $tmpFile = PLUGINS . 'configmanager' . '/tmp_afterChangeFiles.php';
+        $tmpFile = CORE_PLUGINS . 'configmanager' . '/tmp_afterChangeFiles.php';
         if (@file_put_contents($tmpFile, $content, LOCK_EX)) {
             $success = require_once $tmpFile;
             @unlink($tmpFile);

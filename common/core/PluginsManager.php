@@ -68,8 +68,15 @@ class pluginsManager {
             mkdir(DATA_PLUGIN . $name . DS, 0755);
         }
         chmod(DATA_PLUGIN . $name . DS, 0755);
+        
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $name . DS;
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $name . DS;
+        }
+        
         // Read original plugin config
-        $config = util::readJsonFile(PLUGINS . $name . DS .'param' . DS . 'config.json');
+        $config = util::readJsonFile($pluginPath . 'param' . DS . 'config.json');
         // By default, the plugin is not activated
         if ($activate)
             $config['activate'] = 1;
@@ -79,8 +86,8 @@ class pluginsManager {
         util::writeJsonFile(DATA_PLUGIN . $name . DS . 'config.json', $config);
         chmod(DATA_PLUGIN . $name . DS .'config.json', 0644);
         // Call install function if exists
-        if (file_exists(PLUGINS . $name . DS . $name . '.php')) {
-            require_once (PLUGINS . $name . DS . $name . '.php');
+        if (file_exists($pluginPath . $name . '.php')) {
+            require_once ($pluginPath . $name . '.php');
             if (function_exists($name . 'Install')) {
                 logg("Call function '" . $name . "Install'", "info");
                 call_user_func($name . 'Install');
@@ -108,9 +115,15 @@ class pluginsManager {
      * @return bool Returns true if the plugin was successfully uninstalled.
      */
     public function uninstallPlugin(string $name) {
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $name . DS;
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $name . DS;
+        }
+        
         // Call uninstall function if exists
-        if (file_exists(PLUGINS . $name . DS . $name . '.php')) {
-            require_once (PLUGINS . $name . DS . $name . '.php');
+        if (file_exists($pluginPath . $name . '.php')) {
+            require_once ($pluginPath . $name . '.php');
             if (function_exists($name . 'Uninstall')) {
                 logg("Call function '" . $name . "Uninstall'", "info");
                 call_user_func($name . 'Uninstall');
@@ -120,6 +133,7 @@ class pluginsManager {
         if (is_dir(DATA_PLUGIN . $name)) {
             util::delTree(DATA_PLUGIN . $name);
         }
+        // Only remove plugin directory if it's in regular plugins (not core-plugins)
         if (is_dir(PLUGINS . $name)) {
             util::delTree(PLUGINS . $name);
         }
@@ -169,16 +183,32 @@ class pluginsManager {
      * Creates a list of plugin objects.
      *
      * This function creates a list of all active plugins and their respective
-     * configurations. It first scans the plugins directory for directories
-     * and then checks if a configuration file exists for each plugin. If a
-     * configuration file exists, it reads the file and adds the plugin to the
-     * list. If not, it adds the plugin to the list with a low priority.
+     * configurations. It first scans both the plugins directory and core-plugins
+     * directory for directories and then checks if a configuration file exists 
+     * for each plugin. If a configuration file exists, it reads the file and 
+     * adds the plugin to the list. If not, it adds the plugin to the list with 
+     * a low priority.
      *
      * @return array An array of plugin objects.
      */
     private function listPlugins() {
         $data = [];
         $dataNotSorted = [];
+        
+        // Scan core plugins first (they have higher priority)
+        $coreItems = util::scanDir(CORE_PLUGINS);
+        foreach ($coreItems['dir'] as $dir) {
+            // If the plugin is installed, get its configuration
+            if (file_exists(DATA_PLUGIN . $dir . '/config.json')) {
+                $dataNotSorted[$dir] = util::readJsonFile(DATA_PLUGIN . $dir . '/config.json', true);
+            }
+            // Otherwise, give it a low priority
+            else {
+                $dataNotSorted[$dir]['priority'] = '9';
+            }
+        }
+        
+        // Then scan regular plugins
         $items = util::scanDir(PLUGINS);
         foreach ($items['dir'] as $dir) {
             // If the plugin is installed, get its configuration
@@ -190,6 +220,7 @@ class pluginsManager {
                 $dataNotSorted[$dir]['priority'] = '9';
             }
         }
+        
         // Sort the plugins by priority
         $dataSorted = @util::sort2DimArray($dataNotSorted, 'priority', 'num');
         foreach ($dataSorted as $plugin => $config) {
@@ -203,21 +234,28 @@ class pluginsManager {
     private function createPlugin($name) {
         // Instance du core
         $core = core::getInstance();
+        
+        // Determine plugin path (core-plugins first, then regular plugins)
+        $pluginPath = CORE_PLUGINS . $name . '/';
+        if (!is_dir($pluginPath)) {
+            $pluginPath = PLUGINS . $name . '/';
+        }
+        
         // Infos du plugin
-        $infos = util::readJsonFile(PLUGINS . $name . '/param/infos.json');
+        $infos = util::readJsonFile($pluginPath . 'param/infos.json');
         // Configuration du plugin
         $config = util::readJsonFile(DATA_PLUGIN . $name . '/config.json');
         // Hooks du plugin
-        $hooks = util::readJsonFile(PLUGINS . $name . '/param/hooks.json');
+        $hooks = util::readJsonFile($pluginPath . 'param/hooks.json');
         // Config usine
-        $initConfig = util::readJsonFile(PLUGINS . $name . '/param/config.json');
+        $initConfig = util::readJsonFile($pluginPath . 'param/config.json');
         // Derniers checks
         if (!is_array($config))
             $config = [];
         if (!is_array($hooks))
             $hooks = [];
         // Création de l'objet
-        $plugin = new plugin($name, $config, $infos, $hooks, $initConfig);
+        $plugin = new plugin($name, $config, $infos, $hooks, $initConfig, $pluginPath);
         return $plugin;
     }
 
