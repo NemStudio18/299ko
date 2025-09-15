@@ -1,5 +1,5 @@
 <form method="post" action="{{ ROUTER.generate("seo-admin-save")}}">
-    {{ show.tokenField() }}
+    {{ csrf_token_field }}
     <section>
         <header>{{ Lang.seo.display }}</header>
         <p>

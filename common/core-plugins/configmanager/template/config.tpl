@@ -1,5 +1,5 @@
 <form id="configForm" method="post" action="{{link}}" autocomplete="off">
-	{{SHOW.tokenField}}
+	{{ csrf_token_field }}
 
 	<div class='tabs-container'>
 		<ul class="tabs-header">

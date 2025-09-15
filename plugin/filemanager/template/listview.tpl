@@ -83,6 +83,7 @@
 </section>
 
 <form id="fmRedirectFlat" method="POST" action=" {{ redirectUrl }}">
+    {{ csrf_token_field }}
     <input type="text" id="fmCurrDir" name="fmCurrDir" value="{{ dir }}" />
     <input type="text" id="fmFolderToSee" name="fmFolderToSee" value="" />
 </form>

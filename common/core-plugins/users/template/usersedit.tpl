@@ -1,7 +1,7 @@
 <section>
 	<header>{{Lang.users-edit}}</header>
 	<form method="POST" action="{{link}}">
-		{{SHOW.tokenField}}
+		{{ csrf_token_field }}
 		<input type="hidden" name="id" value="{{user.id}}" />
 		<label for="email">{{ Lang.users-mail}}</label>
 		<input type="email" id="email" name="email" value="{{user.email}}" required />

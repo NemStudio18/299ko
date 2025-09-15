@@ -1,7 +1,7 @@
 <section>
     <header>{{ Lang.pluginsmanager.plugins-list }}</header>
     <form method="post" action="{{ ROUTER.generate("pluginsmanager-save") }}" id="pluginsmanagerForm">
-        {{ show::tokenField }}
+        {{ csrf_token_field }}
         <table>
             <thead>
                 <tr>

@@ -1,7 +1,7 @@
 <section>
     <header>{{ Lang.contact.content }}</header>
     <form method="post" action="{{ ROUTER.generate("contact-saveConfig") }}">
-        {{ show.tokenField() }}
+        {{ csrf_token_field }}
         <p>
             <label for="content1">{{ Lang.contact.before_form }}</label>
             <textarea class="editor" name="content1" id="content1">{% HOOK.beforeEditEditor( runPlugin.getConfigVal("content1")) %}</textarea><br>

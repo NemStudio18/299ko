@@ -31,7 +31,7 @@ switch ($catDisplay) {
         <footer id="list-item-endlist">
             <div id="categorie-add-form-container">
                 <h4 id="head-add-cat"><?php echo lang::get($this->getPrefix() . 'addCategory'); ?></h4>
-                <?php show::tokenField(); ?> 
+                <?php echo CSRFProtection::getTokenField(); ?> 
                 <div class="input-field">
                     <label for="category-list-add-label"><?php echo lang::get($this->getPrefix() . 'categoryName'); ?></label>
                     <input type="text" name="category-list-add-label" id="category-list-add-label" required/>

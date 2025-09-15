@@ -1,7 +1,7 @@
 <section>
     <header>{{ Lang.page.edit-parent }}</header>
     <form method="post" action="{{ ROUTER.generate("page-admin-save") }}" enctype="multipart/form-data">
-        {{ show::tokenField() }}
+        {{ csrf_token_field }}
         <input type="hidden" name="id" value="{{ pageItem.getId() }}" />
         <!--<input type="hidden" name="position" value="{{ pageItem.getPosition() }}" />-->
         <input type="hidden" name="target" value="javascript:" />

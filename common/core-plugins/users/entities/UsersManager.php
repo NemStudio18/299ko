@@ -38,10 +38,19 @@ class UsersManager
             // User dont exist
             return false;
         }
-        if ($user->pwd !== self::encrypt($password)) {
+        
+        // Use new secure password verification
+        if (!self::verifyPassword($password, $user->pwd)) {
             // Incorrect mail & pwd
             return false;
         }
+        
+        // Check if password needs rehashing (migration from SHA1)
+        if (self::needsPasswordRehash($user->pwd)) {
+            $user->pwd = self::encrypt($password);
+            logg("Password hash migrated for user: " . $mail, "INFO");
+        }
+        
         $user->token = self::generateToken();
         $user->save();
         self::logon($user);
@@ -68,11 +77,20 @@ class UsersManager
             setcookie('koAutoConnect', '/', 1, '/');
             return false;
         }
-        if ($user->pwd !== $cryptedPwd) {
+        
+        // Use new secure password verification
+        if (!self::verifyPassword($cryptedPwd, $user->pwd)) {
             // Incorrect mail & pwd
             setcookie('koAutoConnect', '/', 1, '/');
             return false;
         }
+        
+        // Check if password needs rehashing (migration from SHA1)
+        if (self::needsPasswordRehash($user->pwd)) {
+            $user->pwd = self::encrypt($cryptedPwd);
+            logg("Password hash migrated for user: " . $mail, "INFO");
+        }
+        
         $user->token = self::generateToken();
         $user->save();
         self::logon($user);
@@ -143,14 +161,15 @@ class UsersManager
     }
 
     /**
-     * Encrypts the given data string.
+     * Encrypts the given data string using modern secure hashing.
      *
      * @param string $data The data to encrypt
      * @return string The encrypted data
      */
     public static function encrypt(string $data): string
     {
-        return hash_hmac('sha1', $data, KEY);
+        // Security fix: Use Argon2ID instead of SHA1
+        return SecureAuth::hashPassword($data);
     }
 
     /**
@@ -160,7 +179,61 @@ class UsersManager
      */
     public static function generateToken(): string
     {
-        return sha1(uniqid(mt_rand(), true));
+        // Security fix: Use cryptographically secure random generation
+        return SecureAuth::generateSecureToken(32);
+    }
+
+    /**
+     * Verify a password against its hash with automatic migration support.
+     *
+     * @param string $password The password to verify
+     * @param string $hash The hash to verify against
+     * @return bool True if password matches, false otherwise
+     */
+    public static function verifyPassword(string $password, string $hash): bool
+    {
+        // Check if it's an old SHA1 hash and migrate if needed
+        if (strlen($hash) === 40 && ctype_xdigit($hash)) {
+            // Old SHA1 hash - verify and allow migration
+            $oldHash = hash_hmac('sha1', $password, KEY);
+            if (hash_equals($oldHash, $hash)) {
+                logg("Password hash migration needed for user", "INFO");
+                return true; // Allow login, but password should be rehashed
+            }
+            return false;
+        }
+        
+        // New Argon2ID hash
+        return SecureAuth::verifyPassword($password, $hash);
+    }
+
+    /**
+     * Check if a password hash needs to be rehashed (for migration).
+     *
+     * @param string $hash The hash to check
+     * @return bool True if hash needs rehashing
+     */
+    public static function needsPasswordRehash(string $hash): bool
+    {
+        // Old SHA1 hashes need rehashing
+        if (strlen($hash) === 40 && ctype_xdigit($hash)) {
+            return true;
+        }
+        
+        // Check if Argon2ID hash needs rehashing
+        return SecureAuth::needsRehash($hash);
+    }
+
+    /**
+     * Migrate an old password hash to the new secure format.
+     *
+     * @param string $password The plain text password
+     * @param string $oldHash The old hash to verify against
+     * @return string|false New hash if migration successful, false otherwise
+     */
+    public static function migratePassword(string $password, string $oldHash): string|false
+    {
+        return SecureAuth::migratePassword($password, $oldHash);
     }
 
 }

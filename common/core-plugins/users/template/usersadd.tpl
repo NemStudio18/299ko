@@ -1,7 +1,7 @@
 <section>
 	<header>{{Lang.users-add}}</header>
 	<form method="POST" action="{{link}}">
-		{{SHOW.tokenField}}
+		{{ csrf_token_field }}
 		<label for="email">{{ Lang.users-mail}}</label>
 		<input type="email" id="email" name="email" required />
 		<label for="pwd">{{Lang.password}}</label>

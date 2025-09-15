@@ -1,5 +1,5 @@
 <form method="post" action="{{ ROUTER.generate("admin-blog-save-config") }}">
-    {{ show.tokenField() }}
+        {{ csrf_token_field }}
     <script>
         function onCheckAuthor() {
             if (document.getElementById("displayAuthor").checked) {

@@ -329,7 +329,7 @@ class Template {
                 }
             } 
             // Check if the name is a variable, callable, object, array or class
-            if (!is_array($name) && !is_callable($name) && !is_object($name) && !isset($parent[$name]) && !class_exists($name)) {
+            if ($name === null || (!is_array($name) && !is_callable($name) && !is_object($name) && !isset($parent[$name]) && !class_exists($name))) {
                 // Unknown $name
                 return false;
             }
@@ -429,6 +429,11 @@ class Template {
     protected function addGlobalsToVars() {
         foreach (self::$const as $key => $value) {
             $this->data[$key] = $value;
+        }
+        
+        // Security fix: Add CSRF protection data to all templates
+        if (class_exists('CSRFProtection')) {
+            $this->data = array_merge($this->data, CSRFProtection::getTemplateData());
         }
     }
 

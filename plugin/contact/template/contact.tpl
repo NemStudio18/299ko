@@ -2,6 +2,7 @@
     {{ runPlugin.getConfigVal("content1") }}
 
     <form method="post" action="{{ sendUrl }}">
+        {{ csrf_token_field }}
         <p>
             <label for="name">{{ Lang.contact.form_name }}</label><br>
             <input style="display:none;" type="text" name="_name" value="" />

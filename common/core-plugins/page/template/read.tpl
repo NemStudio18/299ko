@@ -13,6 +13,7 @@
 			</div>
 		</header>
 		<form method="post" action="">
+			{{ csrf_token_field }}
 			<input type="hidden" name="unlock" value="{{ sendUrl }}"/>
 			<p>
 				<label>Mot de passe</label><br>

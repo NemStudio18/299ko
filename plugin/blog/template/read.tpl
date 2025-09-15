@@ -71,6 +71,7 @@
 			<div id="comments-add-respond">
 				<h2 id="comments-title" data-title="{{ Lang.blog.comments.add-comment}}">{{ Lang.blog.comments.add-comment}}</h2>
 				<form method="post" action="{{ commentSendUrl }}">
+					{{ csrf_token_field }}
 					<button id="comments-cancel-respond" class="small" title="{{Lang.blog.comments.cancel-response}}" aria-label="{{Lang.blog.comments.cancel-response}}"><i class="fa-solid fa-xmark"></i></button>
 					<input type="hidden" name="id" value="{{item.getId}}"/>
 					<input type="hidden" name="commentParentId" id="commentParentId" value="0"/>

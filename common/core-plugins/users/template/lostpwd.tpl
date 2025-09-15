@@ -24,6 +24,7 @@
 				</div>
 			</header>
 			<form method="post" action="{{lostPwdLink}}">
+				{{ csrf_token_field }}
 				<p>
 					<label for="email">{{Lang.email}}</label><br>
 					<input style="display:none;" type="text" name="_email" value="" autocomplete="off"/>
